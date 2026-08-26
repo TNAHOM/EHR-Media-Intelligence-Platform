@@ -11,3 +11,9 @@ __pycache__/
 .pytest_cache/
 .venv/
 .env
+
+.vscode/
+launch.json
+
+*db-shm
+*db-wal
