@@ -70,8 +70,8 @@ CSV-02,MRN-99120,Valid Patient,1980-01-01,Woman,lab,2024-02-01,Normal report
     assert any(log.field_name == "gender" for log in record.audit_trail)
 
 
-def test_api_upload_and_pagination(client: TestClient):
-    """Integration Test: Tests file upload endpoint, pagination, and audit log endpoint."""
+def test_api_upload_and_auto_orchestration(client: TestClient):
+    """Integration Test: Tests unified upload + automatic FHIR generation (auto_process=True)."""
     test_json = b"""[
       {
         "export_id": "REC-API-01",
@@ -84,15 +84,18 @@ def test_api_upload_and_pagination(client: TestClient):
       }
     ]"""
 
-    # 1. Test Upload
+    # 1. Test Upload with default auto_process=True
     response = client.post(
-        "/api/v1/ingest/upload",
+        "/api/v1/ingest/upload?auto_process=true",
         files={"file": ("test.json", test_json, "application/json")},
     )
     assert response.status_code == 200
     res_data = response.json()
     assert res_data["success"] is True
-    assert res_data["data"]["total_cleaned"] == 1
+    assert res_data["data"]["ingestion"]["total_cleaned"] == 1
+    assert res_data["data"]["fhir_normalization"]["total_bundles_created"] == 1
+    assert len(res_data["data"]["bundles"]) == 1
+    assert res_data["data"]["bundles"][0]["patient_mrn"] == "MRN-55555"
 
     # 2. Test Paginated Records
     paged_res = client.get("/api/v1/records?page=1&page_size=10&mrn=MRN-55555")

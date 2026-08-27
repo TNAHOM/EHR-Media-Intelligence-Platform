@@ -1,7 +1,9 @@
 from datetime import date, datetime, timezone
-from typing import Any, Literal, Optional
+from typing import Literal, Optional, Any
 
 from sqlmodel import Field, Relationship, SQLModel
+
+from app.fhir.models import FHIRBundleRead, FHIRValidationReport
 
 GenderType = Literal["male", "female", "other", "unknown"]
 RecordCategory = Literal["clinical_note", "discharge_summary", "lab", "imaging"]
@@ -28,7 +30,6 @@ class AuditLog(AuditLogBase, table=True):
         index=True,
     )
 
-    # Use Optional["CleanRecord"] so SQLAlchemy mapper resolves properly
     record: Optional["CleanRecord"] = Relationship(back_populates="audit_trail")
 
 
@@ -74,3 +75,10 @@ class IngestionSummary(SQLModel):
     total_invalid_dropped: int
     records: list[CleanRecordRead]
     audit_logs_count: int
+
+
+# Composite DTO for Unified Ingest + FHIR Pipeline Response
+class IngestAndProcessResponse(SQLModel):
+    ingestion: IngestionSummary
+    fhir_normalization: FHIRValidationReport | None = None
+    bundles: list[FHIRBundleRead] | None = None

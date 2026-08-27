@@ -1,30 +1,38 @@
 import math
-from collections.abc import Sequence
-from typing import Annotated, Literal
+from typing import Annotated
 
 from app.core.database import get_session
 from app.core.response import PaginatedResponse, PaginationMeta, StandardResponse
+from app.fhir.models import FHIRBundle, FHIRBundleRead
+from app.fhir.service import FHIRService
 from app.ingestion.models import (
     AuditLog,
     AuditLogRead,
     CleanRecord,
     CleanRecordRead,
-    IngestionSummary,
+    IngestAndProcessResponse,
 )
 from app.ingestion.service import IngestionService
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from sqlalchemy import func
 from sqlmodel import Session, col, select
-from sqlmodel.sql._expression_select_cls import SelectOfScalar
 
 router = APIRouter()
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.post("/ingest/upload", response_model=StandardResponse[IngestionSummary])
+@router.post(
+    "/ingest/upload", response_model=StandardResponse[IngestAndProcessResponse]
+)
 async def upload_ehr_file(
     session: SessionDep,
-    file: Annotated[UploadFile, File()],
+    file: Annotated[UploadFile, File(...)],
+    auto_process: Annotated[
+        bool,
+        Query(
+            description="Automatically trigger FHIR R4 Normalization and Bundle generation"
+        ),
+    ] = True,
 ):
     filename = (file.filename or "").lower()
     if not (filename.endswith(".json") or filename.endswith(".csv")):
@@ -33,54 +41,73 @@ async def upload_ehr_file(
             detail="Unsupported file format. Only .json and .csv are permitted.",
         )
 
-    content_bytes: bytes = await file.read()
-    content_str: str = content_bytes.decode("utf-8", errors="ignore")
-    file_type: Literal["json", "csv"] = "json" if filename.endswith(".json") else "csv"
+    content_bytes = await file.read()
+    content_str = content_bytes.decode("utf-8", errors="ignore")
+    file_type = "json" if filename.endswith(".json") else "csv"
 
-    summary: IngestionSummary = IngestionService.ingest_payload(
-        session, content_str, file_type
+    # Ingest and Clean raw records
+    summary = IngestionService.ingest_payload(session, content_str, file_type)
+
+    fhir_report = None
+    bundle_reads = None
+
+    # FHIR Normalization
+    if auto_process:
+        fhir_report = FHIRService.normalize_and_store_all(session)
+
+        # Retrieve the updated list of lightweight FHIR bundle metadata
+        bundle_statement = select(FHIRBundle).order_by(
+            col(FHIRBundle.updated_at).desc()
+        )
+        db_bundles = session.exec(bundle_statement).all()
+        bundle_reads = [FHIRBundleRead.model_validate(b) for b in db_bundles]
+
+    message = (
+        f"Processed {summary.total_processed} raw records "
+        f"({summary.total_cleaned} clean, {summary.total_duplicates_dropped} duplicates dropped)."
     )
+    if auto_process and fhir_report:
+        message += (
+            f" Generated {fhir_report.total_bundles_created} FHIR Bundles "
+            f"({fhir_report.total_resources_mapped} FHIR resources mapped)."
+        )
 
     return StandardResponse(
         success=True,
-        message=(
-            f"Successfully processed {summary.total_processed} records "
-            f"({summary.total_cleaned} clean, {summary.total_duplicates_dropped} duplicates dropped, "
-            f"{summary.total_invalid_dropped} invalid dropped)"
+        message=message,
+        data=IngestAndProcessResponse(
+            ingestion=summary,
+            fhir_normalization=fhir_report,
+            bundles=bundle_reads,
         ),
-        data=summary,
     )
 
 
 @router.get("/records", response_model=PaginatedResponse[CleanRecordRead])
 def get_clean_records(
     session: SessionDep,
-    page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(10, ge=1, le=100, description="Items per page"),
-    mrn: str | None = Query(None, description="Filter by Patient MRN"),
-) -> PaginatedResponse[CleanRecordRead]:
-
-    statement: SelectOfScalar[CleanRecord] = select(CleanRecord)
+    page: Annotated[int, Query(ge=1, description="Page number")] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100, description="Items per page")] = 10,
+    mrn: Annotated[str | None, Query(description="Filter by Patient MRN")] = None,
+):
+    statement = select(CleanRecord)
     if mrn:
         statement = statement.where(col(CleanRecord.patient_mrn) == mrn.strip().upper())
 
-    count_statement: SelectOfScalar[int] = select(func.count()).select_from(
-        statement.subquery()
-    )
+    count_statement = select(func.count()).select_from(statement.subquery())
     total_records = session.exec(count_statement).one()
 
-    # Pagination and sorting
-    offset: int = (page - 1) * page_size
-    paged_statement: SelectOfScalar[CleanRecord] = (
+    offset = (page - 1) * page_size
+    paged_statement = (
         statement.order_by(col(CleanRecord.encounter_date).desc())
         .offset(offset)
         .limit(page_size)
     )
-    records: Sequence[CleanRecord] = session.exec(paged_statement).all()
+    records = session.exec(paged_statement).all()
 
-    total_pages: int = math.ceil(total_records / page_size) if total_records > 0 else 1
+    total_pages = math.ceil(total_records / page_size) if total_records > 0 else 1
 
-    return PaginatedResponse[CleanRecordRead](
+    return PaginatedResponse(
         success=True,
         message="Fetched clean records successfully",
         data=[CleanRecordRead.model_validate(r) for r in records],
@@ -101,15 +128,15 @@ def get_clean_records(
 def get_record_audit_logs(
     record_id: str,
     session: SessionDep,
-) -> StandardResponse[list[AuditLogRead]]:
-    statement: SelectOfScalar[AuditLog] = (
+):
+    statement = (
         select(AuditLog)
         .where(col(AuditLog.record_id) == record_id)
         .order_by(col(AuditLog.created_at).asc())
     )
-    logs: Sequence[AuditLog] = session.exec(statement).all()
+    logs = session.exec(statement).all()
 
-    return StandardResponse[list[AuditLogRead]](
+    return StandardResponse(
         success=True,
         message=f"Fetched {len(logs)} audit entries for record '{record_id}'",
         data=[AuditLogRead.model_validate(log) for log in logs],
