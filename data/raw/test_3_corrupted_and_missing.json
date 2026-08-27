@@ -1,0 +1,32 @@
+[
+  {
+    "export_id": "EXT-ERR-01",
+    "patient_mrn": "",
+    "patient_full_name": "Ghost Patient",
+    "date_of_birth": "1990-01-01",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-03-01T10:00:00Z",
+    "content_body": "Potassium: 4.2 mmol/L"
+  },
+  {
+    "export_id": "EXT-ERR-02",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "not_a_valid_date_format_at_all",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-05T09:00:00Z",
+    "content_body": "Patient reports mild seasonal allergies."
+  },
+  {
+    "export_id": "EXT-303",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988-03-15",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-05T09:00:00Z",
+    "content_body": "Routine cardiology consultation. Resting heart rate 68 bpm. Normal sinus rhythm."
+  }
+]

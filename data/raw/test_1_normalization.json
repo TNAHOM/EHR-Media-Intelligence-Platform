@@ -1,0 +1,22 @@
+[
+  {
+    "export_id": "EXT-101",
+    "patient_mrn": " 88401 ",
+    "patient_full_name": "eleanor vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "discharge summary",
+    "encounter_date": "2024-01-15T14:30:00",
+    "content_body": "Patient admitted for acute chest pain. ECG showed sinus tachycardia. Discharged on Metoprolol 25mg daily."
+  },
+  {
+    "export_id": "EXT-102",
+    "patient_mrn": "MRN99302",
+    "patient_full_name": "MARCUS BRODY",
+    "date_of_birth": "12-May-1975",
+    "gender_code": "M",
+    "document_type": "clinical note",
+    "encounter_date": "Jan 18, 2024",
+    "content_body": "Follow-up for Type 2 Diabetes Mellitus. HbA1c elevated at 9.4%. Referred to podiatry."
+  }
+]

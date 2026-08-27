@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.v1.fhir import router as fhir_router
 from app.api.v1.ingestion import router as ingestion_router
 from app.core.config import settings
 from app.core.database import init_db
@@ -43,4 +44,10 @@ app.include_router(
     ingestion_router,
     prefix=settings.API_V1_STR,
     tags=["Ingestion & Cleaning"],
+)
+
+app.include_router(
+    fhir_router,
+    prefix=f"{settings.API_V1_STR}/fhir",
+    tags=["FHIR R4 Normalization"],
 )
