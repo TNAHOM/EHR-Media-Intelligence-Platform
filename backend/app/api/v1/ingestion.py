@@ -13,6 +13,7 @@ from app.ingestion.models import (
     IngestAndProcessResponse,
 )
 from app.ingestion.service import IngestionService
+from app.search.service import SearchService
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from sqlalchemy import func
 from sqlmodel import Session, col, select
@@ -54,8 +55,9 @@ async def upload_ehr_file(
     # FHIR Normalization
     if auto_process:
         fhir_report = FHIRService.normalize_and_store_all(session)
+        # Automatically update ChromaDB vector index in the background
+        SearchService.index_all_records(session)
 
-        # Retrieve the updated list of lightweight FHIR bundle metadata
         bundle_statement = select(FHIRBundle).order_by(
             col(FHIRBundle.updated_at).desc()
         )

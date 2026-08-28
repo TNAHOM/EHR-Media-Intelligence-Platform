@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-3.6-flash"
     GEMINI_THINKING_LEVEL: Literal["LOW", "MEDIUM", "HIGH"] = "LOW"
 
+    CHROMA_PERSIST_DIR: str = "./data/chroma_db"
+    EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
+
     MAX_SUMMARY_WORDS_PROMPT: int = 190
     MAX_SUMMARY_WORDS_LIMIT: int = 215
 
