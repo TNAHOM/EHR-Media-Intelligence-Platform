@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -6,7 +8,19 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     DATABASE_URL: str = "sqlite:///./data/ehr.db"
     RAW_DATA_DIR: str = "./data/raw"
-    model_config = SettingsConfigDict(case_sensitive=True)
+
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-3.6-flash"
+    GEMINI_THINKING_LEVEL: Literal["LOW", "MEDIUM", "HIGH"] = "LOW"
+
+    MAX_SUMMARY_WORDS_PROMPT: int = 190
+    MAX_SUMMARY_WORDS_LIMIT: int = 215
+
+    model_config = SettingsConfigDict(
+        env_file=(".env", "../.env"),  # Checks backend/.env or root .env
+        case_sensitive=True,
+        extra="ignore",
+    )
 
 
 settings = Settings()
