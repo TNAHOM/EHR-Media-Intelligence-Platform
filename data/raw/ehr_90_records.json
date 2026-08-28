@@ -1,0 +1,902 @@
+[
+  {
+    "export_id": "EXT-1001",
+    "patient_mrn": "MRN-88401",
+    "patient_full_name": "Eleanor Vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-15T14:30:00Z",
+    "content_body": "Patient admitted for acute retrosternal chest pain and dyspnea. 12-lead ECG showed sinus tachycardia (115 bpm). Troponin I elevated at 0.45 ng/mL. Discharged on Metoprolol 25mg daily and Aspirin 81mg. Diagnosis: Non-ST Elevation Acute Coronary Syndrome rule-out."
+  },
+  {
+    "export_id": "EXT-1002",
+    "patient_mrn": "MRN-88401",
+    "patient_full_name": "Eleanor Vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-16",
+    "content_body": "Chest X-Ray (PA and Lateral): Moderate cardiomegaly with mild pulmonary vascular congestion. Lung fields clear of acute focal infiltrates. No pleural effusion."
+  },
+  {
+    "export_id": "EXT-1003",
+    "patient_mrn": "MRN-88401",
+    "patient_full_name": "Eleanor Vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "lab",
+    "encounter_date": "2024-01-16T08:00:00Z",
+    "content_body": "Cardiac Biomarkers Panel: Troponin I 0.45 ng/mL (High, ref <0.04), CK-MB 6.8 ng/mL (Elevated), BNP 420 pg/mL (High). Flagged cardiac enzyme elevation."
+  },
+  {
+    "export_id": "EXT-1004",
+    "patient_mrn": "MRN-88401",
+    "patient_full_name": "Eleanor Vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "clinical_note",
+    "encounter_date": "Jan 30, 2024",
+    "content_body": "Cardiology outpatient follow-up. Patient reports resolution of resting chest tightness. Resting heart rate controlled at 68 bpm on Metoprolol. Transthoracic echocardiogram scheduled."
+  },
+  {
+    "export_id": "EXT-1005",
+    "patient_mrn": "MRN-88401",
+    "patient_full_name": "Eleanor Vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "imaging",
+    "encounter_date": "2024-02-15",
+    "content_body": "Echocardiogram Complete: Left ventricular ejection fraction (LVEF) 52%. Mild concentric left ventricular hypertrophy. Grade 1 diastolic dysfunction."
+  },
+  {
+    "export_id": "EXT-1006",
+    "patient_mrn": "MRN-88401",
+    "patient_full_name": "Eleanor Vance",
+    "date_of_birth": "04/12/1982",
+    "gender_code": "Woman",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-01",
+    "content_body": "Routine cardiology review. Vitals stable at BP 122/78 mmHg, HR 64 bpm. Patient walking 30 minutes daily without angina. Continue current medical therapy."
+  },
+  {
+    "export_id": "EXT-1007",
+    "patient_mrn": "  MRN-99302  ",
+    "patient_full_name": "Marcus Brody",
+    "date_of_birth": "1975-08-21",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-18",
+    "content_body": "Scheduled endocrine follow-up for uncontrolled Type 2 Diabetes Mellitus. Patient reports persistent bilateral burning pain in lower extremities. Referred to podiatry for diabetic neuropathy evaluation."
+  },
+  {
+    "export_id": "EXT-1008",
+    "patient_mrn": "  MRN-99302  ",
+    "patient_full_name": "Marcus Brody",
+    "date_of_birth": "1975-08-21",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-01-18T09:30:00Z",
+    "content_body": "Glycated Hemoglobin & Lipid Panel: HbA1c 9.4% (Critical High, ref <5.7%), Fasting Plasma Glucose 198 mg/dL (High), Total Cholesterol 245 mg/dL, Triglycerides 230 mg/dL."
+  },
+  {
+    "export_id": "EXT-1009",
+    "patient_mrn": "  MRN-99302  ",
+    "patient_full_name": "Marcus Brody",
+    "date_of_birth": "1975-08-21",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "02/05/2024",
+    "content_body": "Podiatry consultation note: Bilateral lower extremity monofilament testing demonstrates reduced protective sensation in L4-S1 distribution. No active foot ulcerations or skin breakdown."
+  },
+  {
+    "export_id": "EXT-1010",
+    "patient_mrn": "  MRN-99302  ",
+    "patient_full_name": "Marcus Brody",
+    "date_of_birth": "1975-08-21",
+    "gender_code": "male",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-02-20",
+    "content_body": "Short stay admission for acute diabetic hyperosmolar management. IV hydration and subcutaneous insulin protocol initiated. Stabilized and discharged on Insulin Glargine 20 units nightly."
+  },
+  {
+    "export_id": "EXT-1011",
+    "patient_mrn": "  MRN-99302  ",
+    "patient_full_name": "Marcus Brody",
+    "date_of_birth": "1975-08-21",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-03-10",
+    "content_body": "Repeat Metabolic Surveillance: Fasting Blood Glucose improved to 132 mg/dL. Urine microalbumin-to-creatinine ratio 45 mg/g (Microalbuminuria detected)."
+  },
+  {
+    "export_id": "EXT-1012",
+    "patient_mrn": "  MRN-99302  ",
+    "patient_full_name": "Marcus Brody",
+    "date_of_birth": "1975-08-21",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-25",
+    "content_body": "Endocrinology progress note: Blood sugars trending lower (morning fasting 110-130 mg/dL). Gabapentin 300mg QHS initiated for peripheral neuropathy symptoms."
+  },
+  {
+    "export_id": "EXT-1013",
+    "patient_mrn": "MRN-33109",
+    "patient_full_name": "Sarah Connor",
+    "date_of_birth": "1965/11/10",
+    "gender_code": "FEMALE",
+    "document_type": "clinical_note",
+    "encounter_date": "2023-11-05",
+    "content_body": "Orthopedic evaluation for severe lower back pain radiating down right posterior leg to lateral foot (L5 dermatome). Straight leg raise test positive on right at 35 degrees."
+  },
+  {
+    "export_id": "EXT-1014",
+    "patient_mrn": "MRN-33109",
+    "patient_full_name": "Sarah Connor",
+    "date_of_birth": "1965/11/10",
+    "gender_code": "FEMALE",
+    "document_type": "imaging",
+    "encounter_date": "2023-11-12",
+    "content_body": "MRI Lumbar Spine without contrast: L4-L5 broad-based posterior disc herniation with moderate central canal stenosis and right lateral recess nerve root compression."
+  },
+  {
+    "export_id": "EXT-1015",
+    "patient_mrn": "MRN-33109",
+    "patient_full_name": "Sarah Connor",
+    "date_of_birth": "1965/11/10",
+    "gender_code": "FEMALE",
+    "document_type": "discharge_summary",
+    "encounter_date": "2023-11-20",
+    "content_body": "Outpatient surgical center discharge: Fluoroscopy-guided right L4-L5 transforaminal epidural steroid injection completed without complication. Pain score decreased from 8/10 to 3/10."
+  },
+  {
+    "export_id": "EXT-1016",
+    "patient_mrn": "MRN-33109",
+    "patient_full_name": "Sarah Connor",
+    "date_of_birth": "1965/11/10",
+    "gender_code": "FEMALE",
+    "document_type": "clinical_note",
+    "encounter_date": "2023-12-15",
+    "content_body": "Post-injection follow-up: Patient reports 70% relief in radicular leg pain. Physical therapy prescribed twice weekly for lumbar core stabilization."
+  },
+  {
+    "export_id": "EXT-1017",
+    "patient_mrn": "MRN-33109",
+    "patient_full_name": "Sarah Connor",
+    "date_of_birth": "1965/11/10",
+    "gender_code": "FEMALE",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-10",
+    "content_body": "Lumbar Spine X-Ray (Flexion/Extension): No dynamic lumbar spondylolisthesis or gross spinal instability identified."
+  },
+  {
+    "export_id": "EXT-1018",
+    "patient_mrn": "MRN-33109",
+    "patient_full_name": "Sarah Connor",
+    "date_of_birth": "1965/11/10",
+    "gender_code": "FEMALE",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-01",
+    "content_body": "Physical therapy completion memo: Core strength improved. Patient walking 2 miles without paresthesias. Discharged to home exercise program."
+  },
+  {
+    "export_id": "EXT-1019",
+    "patient_mrn": "MRN-55210",
+    "patient_full_name": "James Holden",
+    "date_of_birth": "12-May-1990",
+    "gender_code": "M",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-08",
+    "content_body": "Inpatient admission for acute COPD exacerbation and productive cough with purulent sputum. Oxygen saturation 88% on room air at presentation. Treated with IV Methylprednisolone and Duoneb."
+  },
+  {
+    "export_id": "EXT-1020",
+    "patient_mrn": "MRN-55210",
+    "patient_full_name": "James Holden",
+    "date_of_birth": "12-May-1990",
+    "gender_code": "M",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-09",
+    "content_body": "High-Resolution Chest CT: Severe panlobular emphysematous changes in bilateral upper lobes. No acute pulmonary embolism. Mild bronchial wall thickening."
+  },
+  {
+    "export_id": "EXT-1021",
+    "patient_mrn": "MRN-55210",
+    "patient_full_name": "James Holden",
+    "date_of_birth": "12-May-1990",
+    "gender_code": "M",
+    "document_type": "lab",
+    "encounter_date": "2024-01-09",
+    "content_body": "Arterial Blood Gas (ABG): pH 7.34, PaCO2 52 mmHg (Elevated/Hypercapnia), PaO2 62 mmHg, HCO3 28 mmol/L. Suggestive of compensated respiratory acidosis."
+  },
+  {
+    "export_id": "EXT-1022",
+    "patient_mrn": "MRN-55210",
+    "patient_full_name": "James Holden",
+    "date_of_birth": "12-May-1990",
+    "gender_code": "M",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-25",
+    "content_body": "Pulmonology clinic review: Patient completed 5-day prednisone taper. Switched to Trelegy Ellipta once daily. Strongly counseled on smoking cessation."
+  },
+  {
+    "export_id": "EXT-1023",
+    "patient_mrn": "MRN-55210",
+    "patient_full_name": "James Holden",
+    "date_of_birth": "12-May-1990",
+    "gender_code": "M",
+    "document_type": "lab",
+    "encounter_date": "2024-02-14",
+    "content_body": "Pulmonary Function Tests (PFT): FEV1/FVC ratio 58% (Moderate persistent airflow obstruction). Significant post-bronchodilator reversibility (+14% in FEV1)."
+  },
+  {
+    "export_id": "EXT-1024",
+    "patient_mrn": "MRN-55210",
+    "patient_full_name": "James Holden",
+    "date_of_birth": "12-May-1990",
+    "gender_code": "M",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-05",
+    "content_body": "Routine pulmonary surveillance: Dyspnea on exertion improved to mMRC Grade 1. Oxygen saturation 96% on room air. Flu and Pneumococcal vaccinations administered."
+  },
+  {
+    "export_id": "EXT-1025",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988.03.15",
+    "gender_code": "Female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-10",
+    "content_body": "Neurology consultation for intractable hemicranial throbbing headaches occurring 4-5 times per week, accompanied by scintillating scotoma, nausea, and photophobia."
+  },
+  {
+    "export_id": "EXT-1026",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988.03.15",
+    "gender_code": "Female",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-14",
+    "content_body": "Brain MRI with and without IV Gadolinium: Normal brain parenchyma. No intracranial mass lesion, acute infarct, or vascular malformation. Ventricles normal in caliber."
+  },
+  {
+    "export_id": "EXT-1027",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988.03.15",
+    "gender_code": "Female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-28",
+    "content_body": "Neurology follow-up: Diagnosis confirmed as Chronic Migraine with Aura. Initiated preventive therapy with Topiramate 25mg nightly, titrated to 50mg. Prescribed Rizatriptan for abortive use."
+  },
+  {
+    "export_id": "EXT-1028",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988.03.15",
+    "gender_code": "Female",
+    "document_type": "lab",
+    "encounter_date": "2024-02-10",
+    "content_body": "Comprehensive Metabolic Panel (CMP): Serum Creatinine 0.8 mg/dL, AST 18 U/L, ALT 22 U/L, Serum Bicarbonate 22 mEq/L. Normal renal and hepatic baseline."
+  },
+  {
+    "export_id": "EXT-1029",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988.03.15",
+    "gender_code": "Female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-28",
+    "content_body": "Headache clinic review: Migraine frequency decreased from 18 days/month to 6 days/month on Topiramate. Mild distal paresthesias noted as known side effect."
+  },
+  {
+    "export_id": "EXT-1030",
+    "patient_mrn": "MRN-77114",
+    "patient_full_name": "Naomi Nagata",
+    "date_of_birth": "1988.03.15",
+    "gender_code": "Female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-20",
+    "content_body": "Long-term neurology follow-up: Headache log shows sustained reduction. Patient tolerating medication well with good quality of life improvement."
+  },
+  {
+    "export_id": "EXT-1031",
+    "patient_mrn": "MRN-11029",
+    "patient_full_name": "David Miller",
+    "date_of_birth": "09/30/1958",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-12",
+    "content_body": "Nephrology referral for progressive decline in renal function. History of hypertension for 20 years. Mild bilateral pitting pedal edema noted."
+  },
+  {
+    "export_id": "EXT-1032",
+    "patient_mrn": "MRN-11029",
+    "patient_full_name": "David Miller",
+    "date_of_birth": "09/30/1958",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-01-12",
+    "content_body": "Renal Function Panel: Serum Creatinine 2.1 mg/dL (High, baseline 1.6), Blood Urea Nitrogen (BUN) 38 mg/dL (High), eGFR 34 mL/min/1.73m2. Stage 3b Chronic Kidney Disease."
+  },
+  {
+    "export_id": "EXT-1033",
+    "patient_mrn": "MRN-11029",
+    "patient_full_name": "David Miller",
+    "date_of_birth": "09/30/1958",
+    "gender_code": "male",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-18",
+    "content_body": "Renal Ultrasound with Doppler: Bilateral kidneys symmetric with increased echogenicity compatible with chronic medical renal disease. No hydronephrosis or renal artery stenosis."
+  },
+  {
+    "export_id": "EXT-1034",
+    "patient_mrn": "MRN-11029",
+    "patient_full_name": "David Miller",
+    "date_of_birth": "09/30/1958",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-02-05",
+    "content_body": "Urinalysis & 24-hr Protein: Proteinuria 850 mg/24hr (Elevated). Serum Potassium 4.9 mmol/L. Urine microscopy negative for red cell casts."
+  },
+  {
+    "export_id": "EXT-1035",
+    "patient_mrn": "MRN-11029",
+    "patient_full_name": "David Miller",
+    "date_of_birth": "09/30/1958",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-20",
+    "content_body": "Nephrology management note: Adjusted Lisinopril to Losartan 25mg daily. Placed on renal-protective dietary protocol with sodium <2g/day and moderate protein intake."
+  },
+  {
+    "export_id": "EXT-1036",
+    "patient_mrn": "MRN-11029",
+    "patient_full_name": "David Miller",
+    "date_of_birth": "09/30/1958",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-03-15",
+    "content_body": "Surveillance Renal Panel: Serum Creatinine stable at 2.0 mg/dL, eGFR 36 mL/min. Serum potassium stable at 4.7 mmol/L. Proteinuria decreased to 520 mg/24hr."
+  },
+  {
+    "export_id": "EXT-1037",
+    "patient_mrn": "MRN-44918",
+    "patient_full_name": "Elena Rostova",
+    "date_of_birth": "1978-12-04",
+    "gender_code": "F",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-22",
+    "content_body": "Emergency admission for severe epigastric abdominal pain radiating to the back following heavy meal. Serum Lipase markedly elevated. Managed with aggressive NPO and IV crystalloids."
+  },
+  {
+    "export_id": "EXT-1038",
+    "patient_mrn": "MRN-44918",
+    "patient_full_name": "Elena Rostova",
+    "date_of_birth": "1978-12-04",
+    "gender_code": "F",
+    "document_type": "lab",
+    "encounter_date": "2024-01-22",
+    "content_body": "Pancreatic Enzymes & LFT: Serum Lipase 1,250 U/L (Critical High, ref <60), Serum Amylase 410 U/L (High), Total Bilirubin 1.1 mg/dL, ALT 35 U/L."
+  },
+  {
+    "export_id": "EXT-1039",
+    "patient_mrn": "MRN-44918",
+    "patient_full_name": "Elena Rostova",
+    "date_of_birth": "1978-12-04",
+    "gender_code": "F",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-23",
+    "content_body": "Abdominal Ultrasound: Gallbladder contains multiple small acoustic shadowing calculi (cholelithiasis). Common bile duct diameter normal at 4mm. No pericholecystic fluid."
+  },
+  {
+    "export_id": "EXT-1040",
+    "patient_mrn": "MRN-44918",
+    "patient_full_name": "Elena Rostova",
+    "date_of_birth": "1978-12-04",
+    "gender_code": "F",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-05",
+    "content_body": "Gastroenterology post-discharge review: Acute pancreatitis resolved. Diagnosed with mild gallstone pancreatitis. Elective outpatient laparoscopic cholecystectomy recommended."
+  },
+  {
+    "export_id": "EXT-1041",
+    "patient_mrn": "MRN-44918",
+    "patient_full_name": "Elena Rostova",
+    "date_of_birth": "1978-12-04",
+    "gender_code": "F",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-02-25",
+    "content_body": "Surgical discharge note: Elective laparoscopic cholecystectomy completed without incident. Pathology confirmed chronic cholecystitis with cholelithiasis."
+  },
+  {
+    "export_id": "EXT-1042",
+    "patient_mrn": "MRN-44918",
+    "patient_full_name": "Elena Rostova",
+    "date_of_birth": "1978-12-04",
+    "gender_code": "F",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-12",
+    "content_body": "Post-operative surgical check: Incisions healing well. Tolerating regular low-fat diet without nausea or abdominal pain. Normal bowel habits restored."
+  },
+  {
+    "export_id": "EXT-1043",
+    "patient_mrn": "MRN-66321",
+    "patient_full_name": "Arthur Pendelton",
+    "date_of_birth": "1962-06-18",
+    "gender_code": "Man",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-05",
+    "content_body": "Rheumatology evaluation for symmetric joint stiffness lasting >2 hours in morning, affecting bilateral MCP, PIP, and wrist joints for 4 months."
+  },
+  {
+    "export_id": "EXT-1044",
+    "patient_mrn": "MRN-66321",
+    "patient_full_name": "Arthur Pendelton",
+    "date_of_birth": "1962-06-18",
+    "gender_code": "Man",
+    "document_type": "lab",
+    "encounter_date": "2024-01-05",
+    "content_body": "Rheumatology Serologies: Rheumatoid Factor (RF) positive at 120 IU/mL, Anti-CCP antibodies >250 U/mL (Strongly positive), ESR 48 mm/hr, CRP 24 mg/L."
+  },
+  {
+    "export_id": "EXT-1045",
+    "patient_mrn": "MRN-66321",
+    "patient_full_name": "Arthur Pendelton",
+    "date_of_birth": "1962-06-18",
+    "gender_code": "Man",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-12",
+    "content_body": "Bilateral Hands & Wrists X-Rays: Periarticular osteopenia and mild joint space narrowing in 2nd and 3rd MCP joints bilaterally. No definite marginal erosions."
+  },
+  {
+    "export_id": "EXT-1046",
+    "patient_mrn": "MRN-66321",
+    "patient_full_name": "Arthur Pendelton",
+    "date_of_birth": "1962-06-18",
+    "gender_code": "Man",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-26",
+    "content_body": "Rheumatology treatment plan: Established diagnosis of Seropositive Rheumatoid Arthritis. Initiated Methotrexate 15mg weekly with Folic Acid 1mg daily and short-term Prednisone 10mg."
+  },
+  {
+    "export_id": "EXT-1047",
+    "patient_mrn": "MRN-66321",
+    "patient_full_name": "Arthur Pendelton",
+    "date_of_birth": "1962-06-18",
+    "gender_code": "Man",
+    "document_type": "lab",
+    "encounter_date": "2024-02-28",
+    "content_body": "Drug Monitoring Panel: CBC and Liver enzymes normal on Methotrexate (ALT 20 U/L, WBC 6.8). CRP decreased to 8.2 mg/L. ESR improved to 22 mm/hr."
+  },
+  {
+    "export_id": "EXT-1048",
+    "patient_mrn": "MRN-66321",
+    "patient_full_name": "Arthur Pendelton",
+    "date_of_birth": "1962-06-18",
+    "gender_code": "Man",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-22",
+    "content_body": "Rheumatology follow-up: Morning stiffness reduced to 20 minutes. Joint tenderness count reduced from 14 to 3 joints. Prednisone tapered successfully to 2.5mg."
+  },
+  {
+    "export_id": "EXT-1049",
+    "patient_mrn": "MRN-22894",
+    "patient_full_name": "Chloe Bennett",
+    "date_of_birth": "1985-04-30",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-03",
+    "content_body": "Breast health consultation following screening mammogram showing 1.2 cm suspicious architectural distortion with microcalcifications in right upper outer quadrant."
+  },
+  {
+    "export_id": "EXT-1050",
+    "patient_mrn": "MRN-22894",
+    "patient_full_name": "Chloe Bennett",
+    "date_of_birth": "1985-04-30",
+    "gender_code": "female",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-08",
+    "content_body": "Diagnostic Mammogram & Breast Ultrasound: BI-RADS Category 4C (High suspicion for malignancy). 1.4 cm irregular hypoechoic mass with indistinct margins at 10:00 position."
+  },
+  {
+    "export_id": "EXT-1051",
+    "patient_mrn": "MRN-22894",
+    "patient_full_name": "Chloe Bennett",
+    "date_of_birth": "1985-04-30",
+    "gender_code": "female",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-18",
+    "content_body": "Outpatient biopsy note: Ultrasound-guided 14-gauge core needle biopsy of right breast mass performed. Titanium marker clip successfully deployed at biopsy site."
+  },
+  {
+    "export_id": "EXT-1052",
+    "patient_mrn": "MRN-22894",
+    "patient_full_name": "Chloe Bennett",
+    "date_of_birth": "1985-04-30",
+    "gender_code": "female",
+    "document_type": "lab",
+    "encounter_date": "2024-01-22",
+    "content_body": "Surgical Pathology Report: Invasive Ductal Carcinoma, Grade 1 (Well differentiated). Estrogen Receptor (ER) positive (95%), Progesterone Receptor (PR) positive (80%), HER2-neu negative."
+  },
+  {
+    "export_id": "EXT-1053",
+    "patient_mrn": "MRN-22894",
+    "patient_full_name": "Chloe Bennett",
+    "date_of_birth": "1985-04-30",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-10",
+    "content_body": "Multidisciplinary tumor board conference review: Clinical Stage I (cT1c N0 M0). Recommended breast-conserving surgery (lumpectomy) with sentinel lymph node biopsy."
+  },
+  {
+    "export_id": "EXT-1054",
+    "patient_mrn": "MRN-22894",
+    "patient_full_name": "Chloe Bennett",
+    "date_of_birth": "1985-04-30",
+    "gender_code": "female",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-03-02",
+    "content_body": "Post-operative surgical discharge: Right partial mastectomy and sentinel lymph node dissection completed. Sentinel lymph nodes (2/2) negative for metastatic carcinoma."
+  },
+  {
+    "export_id": "EXT-1055",
+    "patient_mrn": "MRN-90145",
+    "patient_full_name": "Samuel Jackson",
+    "date_of_birth": "1994-09-14",
+    "gender_code": "male",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-11",
+    "content_body": "Emergency hospital admission: 29-year-old male presenting with acute migratory right lower quadrant abdominal pain, anorexia, and low-grade fever (100.8F). McBurney point tenderness positive."
+  },
+  {
+    "export_id": "EXT-1056",
+    "patient_mrn": "MRN-90145",
+    "patient_full_name": "Samuel Jackson",
+    "date_of_birth": "1994-09-14",
+    "gender_code": "male",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-11",
+    "content_body": "Abdomen/Pelvis CT with IV Contrast: Distended appendix measuring 11mm in diameter with wall thickening and surrounding peri-appendiceal fat stranding. Consistent with Acute Appendicitis."
+  },
+  {
+    "export_id": "EXT-1057",
+    "patient_mrn": "MRN-90145",
+    "patient_full_name": "Samuel Jackson",
+    "date_of_birth": "1994-09-14",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-01-11",
+    "content_body": "Emergency Lab Panel: WBC count 16.4 x10^3/uL (Leukocytosis with left shift, 84% neutrophils). Serum lactate normal at 1.1 mmol/L."
+  },
+  {
+    "export_id": "EXT-1058",
+    "patient_mrn": "MRN-90145",
+    "patient_full_name": "Samuel Jackson",
+    "date_of_birth": "1994-09-14",
+    "gender_code": "male",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-13",
+    "content_body": "Surgical discharge note: Emergent laparoscopic appendectomy performed. Operative findings confirmed acute suppurative appendicitis without perforation. Tolerating diet on discharge."
+  },
+  {
+    "export_id": "EXT-1059",
+    "patient_mrn": "MRN-90145",
+    "patient_full_name": "Samuel Jackson",
+    "date_of_birth": "1994-09-14",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-26",
+    "content_body": "Two-week surgical post-op: Incision sites healed with no erythema or drainage. Normal bowel movements. Cleared for full physical activity and return to work."
+  },
+  {
+    "export_id": "EXT-1060",
+    "patient_mrn": "MRN-90145",
+    "patient_full_name": "Samuel Jackson",
+    "date_of_birth": "1994-09-14",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-15",
+    "content_body": "Routine clinic encounter: Patient fully recovered from appendectomy. Vitals normal. No gastrointestinal complaints."
+  },
+  {
+    "export_id": "EXT-1061",
+    "patient_mrn": "MRN-34190",
+    "patient_full_name": "Grace Hopper",
+    "date_of_birth": "1972-10-25",
+    "gender_code": "F",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-20",
+    "content_body": "Inpatient admission for Community-Acquired Pneumonia (CAP). Presenting with fever (102.2F), right pleuritic chest pain, and productive cough with rust-colored sputum."
+  },
+  {
+    "export_id": "EXT-1062",
+    "patient_mrn": "MRN-34190",
+    "patient_full_name": "Grace Hopper",
+    "date_of_birth": "1972-10-25",
+    "gender_code": "F",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-20",
+    "content_body": "Chest Radiograph (PA/Lateral): Dense alveolar consolidation in right middle and lower lobes with visible air bronchograms. No pneumothorax."
+  },
+  {
+    "export_id": "EXT-1063",
+    "patient_mrn": "MRN-34190",
+    "patient_full_name": "Grace Hopper",
+    "date_of_birth": "1972-10-25",
+    "gender_code": "F",
+    "document_type": "lab",
+    "encounter_date": "2024-01-21",
+    "content_body": "Infectious Disease Panel: Sputum Gram Stain shows gram-positive diplococci. Blood cultures positive for Streptococcus pneumoniae (sensitive to Ceftriaxone). Procalcitonin 1.8 ng/mL (Elevated)."
+  },
+  {
+    "export_id": "EXT-1064",
+    "patient_mrn": "MRN-34190",
+    "patient_full_name": "Grace Hopper",
+    "date_of_birth": "1972-10-25",
+    "gender_code": "F",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-02",
+    "content_body": "Infectious disease follow-up: Completed 7-day course of oral Amoxicillin-Clavulanate. Fever completely resolved, cough significantly improved. Energy levels recovering."
+  },
+  {
+    "export_id": "EXT-1065",
+    "patient_mrn": "MRN-34190",
+    "patient_full_name": "Grace Hopper",
+    "date_of_birth": "1972-10-25",
+    "gender_code": "F",
+    "document_type": "imaging",
+    "encounter_date": "2024-02-28",
+    "content_body": "Repeat Chest X-Ray: Substantial clearing of right middle and lower lobe consolidation. Minimal residual linear atelectasis."
+  },
+  {
+    "export_id": "EXT-1066",
+    "patient_mrn": "MRN-34190",
+    "patient_full_name": "Grace Hopper",
+    "date_of_birth": "1972-10-25",
+    "gender_code": "F",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-15",
+    "content_body": "Pulmonary wellness visit: Lungs clear to auscultation bilaterally. No dyspnea on exertion. Pneumococcal conjugate vaccination administered."
+  },
+  {
+    "export_id": "EXT-1067",
+    "patient_mrn": "MRN-78230",
+    "patient_full_name": "Victor Vance",
+    "date_of_birth": "1968-02-14",
+    "gender_code": "M",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-17",
+    "content_body": "Emergency department admission for acute left calf pain, swelling, and localized erythema following 14-hour international flight. Left calf circumference 3cm larger than right."
+  },
+  {
+    "export_id": "EXT-1068",
+    "patient_mrn": "MRN-78230",
+    "patient_full_name": "Victor Vance",
+    "date_of_birth": "1968-02-14",
+    "gender_code": "M",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-17",
+    "content_body": "Venous Duplex Ultrasound (Left Lower Extremity): Non-compressible left popliteal and posterior tibial veins with intraluminal thrombus. Confirms Acute Deep Vein Thrombosis (DVT)."
+  },
+  {
+    "export_id": "EXT-1069",
+    "patient_mrn": "MRN-78230",
+    "patient_full_name": "Victor Vance",
+    "date_of_birth": "1968-02-14",
+    "gender_code": "M",
+    "document_type": "lab",
+    "encounter_date": "2024-01-17",
+    "content_body": "Coagulation & D-Dimer: D-Dimer markedly elevated at 2,850 ng/mL (ref <500). PT 12.1 sec, INR 1.0, aPTT 28 sec. Baseline renal function normal."
+  },
+  {
+    "export_id": "EXT-1070",
+    "patient_mrn": "MRN-78230",
+    "patient_full_name": "Victor Vance",
+    "date_of_birth": "1968-02-14",
+    "gender_code": "M",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-25",
+    "content_body": "Hematology/Vascular clinic: Started on Apixaban (Eliquis) 10mg BID for 7 days, transitioning to 5mg BID for 3 months. Counseled on signs of bleeding and pulmonary embolism."
+  },
+  {
+    "export_id": "EXT-1071",
+    "patient_mrn": "MRN-78230",
+    "patient_full_name": "Victor Vance",
+    "date_of_birth": "1968-02-14",
+    "gender_code": "M",
+    "document_type": "imaging",
+    "encounter_date": "2024-03-01",
+    "content_body": "Follow-up Venous Ultrasound: Significant recanalization of left popliteal vein with resolving residual thrombus. Good spontaneous flow."
+  },
+  {
+    "export_id": "EXT-1072",
+    "patient_mrn": "MRN-78230",
+    "patient_full_name": "Victor Vance",
+    "date_of_birth": "1968-02-14",
+    "gender_code": "M",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-20",
+    "content_body": "Vascular progress note: Left leg swelling completely resolved. Patient walking daily without calf tenderness. Plan to complete 3-month course of Apixaban."
+  },
+  {
+    "export_id": "EXT-1073",
+    "patient_mrn": "MRN-56329",
+    "patient_full_name": "Maya Lin",
+    "date_of_birth": "1992-07-08",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-04",
+    "content_body": "Psychiatric intake evaluation: Patient presents with 6-month history of persistent depressed mood, anhedonia, early morning awakening, and severe generalized anxiety with panic episodes."
+  },
+  {
+    "export_id": "EXT-1074",
+    "patient_mrn": "MRN-56329",
+    "patient_full_name": "Maya Lin",
+    "date_of_birth": "1992-07-08",
+    "gender_code": "female",
+    "document_type": "lab",
+    "encounter_date": "2024-01-04",
+    "content_body": "Diagnostic Psychiatric Workup: TSH 2.1 mIU/L (Normal), Free T4 1.2 ng/dL, Serum Vitamin B12 480 pg/mL, Vitamin D 25-OH 18 ng/mL (Low/Insufficiency)."
+  },
+  {
+    "export_id": "EXT-1075",
+    "patient_mrn": "MRN-56329",
+    "patient_full_name": "Maya Lin",
+    "date_of_birth": "1992-07-08",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-18",
+    "content_body": "Psychiatry treatment session: Diagnosis of Major Depressive Disorder (Moderate) and Generalized Anxiety Disorder. Initiated Sertraline 25mg daily, titrating to 50mg. Ergocalciferol 50,000 IU weekly for Vitamin D deficiency."
+  },
+  {
+    "export_id": "EXT-1076",
+    "patient_mrn": "MRN-56329",
+    "patient_full_name": "Maya Lin",
+    "date_of_birth": "1992-07-08",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-15",
+    "content_body": "Medication management follow-up: PHQ-9 depression score improved from 18 to 11. GAD-7 anxiety score decreased from 16 to 8. Sertraline dose increased to 75mg daily. No suicidal ideation."
+  },
+  {
+    "export_id": "EXT-1077",
+    "patient_mrn": "MRN-56329",
+    "patient_full_name": "Maya Lin",
+    "date_of_birth": "1992-07-08",
+    "gender_code": "female",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-08",
+    "content_body": "Psychotherapy progress note: Patient reports improved sleep architecture (sleeping 7 hours nightly). Engaging actively in cognitive behavioral therapy (CBT) exercises."
+  },
+  {
+    "export_id": "EXT-1078",
+    "patient_mrn": "MRN-56329",
+    "patient_full_name": "Maya Lin",
+    "date_of_birth": "1992-07-08",
+    "gender_code": "female",
+    "document_type": "lab",
+    "encounter_date": "2024-03-22",
+    "content_body": "Repeat Nutritional Surveillance: Vitamin D 25-OH normalized to 44 ng/mL. Patient reports improved overall stamina and daily mood stability."
+  },
+  {
+    "export_id": "EXT-1079",
+    "patient_mrn": "MRN-89412",
+    "patient_full_name": "Robert Chen",
+    "date_of_birth": "1983-05-22",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-09",
+    "content_body": "Dermatology total body skin exam: Asymmetric, irregularly pigmented 7mm macule with dark brown and black variegation identified on right upper back. High clinical suspicion for dysplastic lesion."
+  },
+  {
+    "export_id": "EXT-1080",
+    "patient_mrn": "MRN-89412",
+    "patient_full_name": "Robert Chen",
+    "date_of_birth": "1983-05-22",
+    "gender_code": "male",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-15",
+    "content_body": "Minor surgical procedure: Complete saucerization excisional biopsy of 7mm pigmented lesion on right upper back with 2mm clinical margins performed under local anesthesia."
+  },
+  {
+    "export_id": "EXT-1081",
+    "patient_mrn": "MRN-89412",
+    "patient_full_name": "Robert Chen",
+    "date_of_birth": "1983-05-22",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-01-20",
+    "content_body": "Dermatopathology Report: Compound Melanocytic Nevus with Severe Architectural and Cytological Atypia (Severely Dysplastic Nevus). Peripheral and deep surgical margins free of lesion."
+  },
+  {
+    "export_id": "EXT-1082",
+    "patient_mrn": "MRN-89412",
+    "patient_full_name": "Robert Chen",
+    "date_of_birth": "1983-05-22",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-02-05",
+    "content_body": "Dermatology follow-up: Discussed pathology results. Due to severe atypia, recommended conservative 5mm re-excision to ensure complete histological clearance."
+  },
+  {
+    "export_id": "EXT-1083",
+    "patient_mrn": "MRN-89412",
+    "patient_full_name": "Robert Chen",
+    "date_of_birth": "1983-05-22",
+    "gender_code": "male",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-02-18",
+    "content_body": "Outpatient wide local excision: Re-excision of prior biopsy site on right upper back with 5mm margins. Closed with layered sutures."
+  },
+  {
+    "export_id": "EXT-1084",
+    "patient_mrn": "MRN-89412",
+    "patient_full_name": "Robert Chen",
+    "date_of_birth": "1983-05-22",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-04",
+    "content_body": "Suture removal and final review: Re-excision pathology confirmed completely negative scar tissue. Scheduled for routine 6-month surveillance skin exam."
+  },
+  {
+    "export_id": "EXT-1085",
+    "patient_mrn": "MRN-12903",
+    "patient_full_name": "Carlos Santana",
+    "date_of_birth": "1976-11-19",
+    "gender_code": "male",
+    "document_type": "discharge_summary",
+    "encounter_date": "2024-01-14",
+    "content_body": "Emergency presentation for acute severe right flank pain radiating to groin, accompanied by microscopic hematuria and severe nausea. Given IV Ketorolac and Ondansetron."
+  },
+  {
+    "export_id": "EXT-1086",
+    "patient_mrn": "MRN-12903",
+    "patient_full_name": "Carlos Santana",
+    "date_of_birth": "1976-11-19",
+    "gender_code": "male",
+    "document_type": "imaging",
+    "encounter_date": "2024-01-14",
+    "content_body": "Non-Contrast Helical CT Abdomen/Pelvis: 5.5mm obstructing calculus at right ureterovesical junction (UVJ) causing mild right hydroureteronephrosis. Left kidney normal."
+  },
+  {
+    "export_id": "EXT-1087",
+    "patient_mrn": "MRN-12903",
+    "patient_full_name": "Carlos Santana",
+    "date_of_birth": "1976-11-19",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-01-14",
+    "content_body": "Urinalysis & Renal Panel: Urine RBC >50/HPF (Gross microscopic hematuria), Urine WBC 2-4/HPF, Nitrite negative. Serum Creatinine normal at 1.0 mg/dL."
+  },
+  {
+    "export_id": "EXT-1088",
+    "patient_mrn": "MRN-12903",
+    "patient_full_name": "Carlos Santana",
+    "date_of_birth": "1976-11-19",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-01-22",
+    "content_body": "Urology outpatient check: Patient successfully passed stone at home after 5 days on Tamsulosin (Flomax) 0.4mg. Flank pain completely resolved. Stone submitted for analysis."
+  },
+  {
+    "export_id": "EXT-1089",
+    "patient_mrn": "MRN-12903",
+    "patient_full_name": "Carlos Santana",
+    "date_of_birth": "1976-11-19",
+    "gender_code": "male",
+    "document_type": "lab",
+    "encounter_date": "2024-02-02",
+    "content_body": "Stone Mineral Composition Analysis: 100% Calcium Oxalate Monohydrate. 24-hour urine metabolic evaluation ordered."
+  },
+  {
+    "export_id": "EXT-1090",
+    "patient_mrn": "MRN-12903",
+    "patient_full_name": "Carlos Santana",
+    "date_of_birth": "1976-11-19",
+    "gender_code": "male",
+    "document_type": "clinical_note",
+    "encounter_date": "2024-03-01",
+    "content_body": "Metabolic Stone Prevention review: 24-hour urine showed mild hypercalciuria with low urinary volume (1.2L). Instructed on aggressive fluid hydration (>2.5L/day) and low-sodium diet."
+  }
+]
