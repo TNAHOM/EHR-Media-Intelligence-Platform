@@ -1,10 +1,8 @@
-# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 
-# Environments & Tests
 .pytest_cache/
 .venv/
 env/
@@ -18,15 +16,12 @@ launch.json
 .idea/
 .DS_Store
 
-# Logs
 *.log
 log.txt
 **/log.txt
 
-# Scripts
 **/scripts/**
 
-# Databases & Vector DBs
 *.db
 *.db-shm
 *.db-wal
@@ -37,5 +32,4 @@ chroma_db/
 data/chroma_db/
 backend/data/
 
-# Build artifacts
 *.tsbuildinfo

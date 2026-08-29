@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, Filter, Calendar, X, Loader2, Sparkles } from 'lucide-react';
+import { sampleQueries } from '../common/shared';
 
 interface SearchAndFiltersProps {
   query: string;
@@ -39,13 +40,6 @@ export default function SearchAndFilters({
       onSearch();
     }
   };
-
-  const sampleQueries = [
-    'chest pain and elevated troponin',
-    'diabetic peripheral neuropathy',
-    'moderate cardiomegaly on chest xray',
-    'migraine with visual aura',
-  ];
 
   const hasActiveFilters = Boolean(resourceType || dateFrom || dateTo || patientMrn);
 

@@ -23,10 +23,10 @@ export default function ResultCard({ item, onSelectPatient }: ResultCardProps) {
   const scorePercent = isSearchMatch ? Math.round((item.relevance_score || 0) * 100) : null;
 
   const getScoreBadge = (score: number): ScoreBadge => {
-    if (score >= 0.40) {
+    if (score >= 0.30) {
       return { bg: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'High Match' };
     }
-    if (score >= 0.25) {
+    if (score >= 0.15) {
       return { bg: 'bg-amber-50 text-amber-700 border-amber-200', label: 'Moderate' };
     }
     return { bg: 'bg-slate-100 text-slate-600 border-slate-200', label: 'Low Relevance' };

@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     MAX_SUMMARY_WORDS_LIMIT: int = 215
 
     model_config = SettingsConfigDict(
-        env_file=(".env", "../.env"),  # Checks backend/.env or root .env
+        env_file=(".env", "../.env"),
         case_sensitive=True,
         extra="ignore",
     )

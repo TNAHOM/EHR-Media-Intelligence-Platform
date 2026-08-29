@@ -60,7 +60,7 @@ export interface SearchRecordParams {
 }
 
 export interface SearchResultItem {
-  record_id: string | number;
+  record_id: string;
   patient_mrn: string;
   patient_name: string;
   record_date: string;

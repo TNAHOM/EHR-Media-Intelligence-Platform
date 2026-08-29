@@ -5,6 +5,7 @@ import ResultCard from './components/ResultCard';
 import PatientDrawer from './components/PatientDrawer';
 import UploadModal from './components/UploadModal';
 import Pagination from './components/Pagination';
+import EmptyState from './components/EmptyState';
 import {
   fetchCleanRecords,
   mapCleanRecordToSearchResultItem,
@@ -124,7 +125,7 @@ export default function App() {
         dateFrom: dateFrom || undefined,
         dateTo: dateTo || undefined,
         patientMrn: patientMrn.trim() || undefined,
-        limit: 50,
+        limit: 10,
       });
 
       if (res.data) {
@@ -265,35 +266,19 @@ export default function App() {
             ))}
           </div>
         ) : displayedRecords.length === 0 ? (
-          <div className="text-center py-14 bg-white rounded-xl border border-slate-200 p-6 space-y-3 shadow-sm">
-            <h3 className="font-semibold text-slate-800 text-sm sm:text-base">
-              {isSearchMode
-                ? 'No clinical records matched your search query'
-                : 'No clinical records found'}
-            </h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto">
-              {isSearchMode
-                ? 'Try broadening your search query or removing the date/type filters.'
-                : 'No records match your active filters, or the database is currently empty.'}
-            </p>
-            {isSearchMode ? (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" /> Back to All Records
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setIsUploadOpen(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
-              >
-                Upload EHR Dataset
-              </button>
-            )}
-          </div>
+          isSearchMode ? (
+            <EmptyState
+              type="search_empty"
+              searchQuery={activeSearchQuery}
+              onClearSearch={handleClearSearch}
+              onQuickSearch={handleQuickSearch}
+            />
+          ) : (
+            <EmptyState
+              type="browse_empty"
+              onOpenUpload={() => setIsUploadOpen(true)}
+            />
+          )
         ) : (
           <div className="space-y-4">
             <div className="space-y-3">
