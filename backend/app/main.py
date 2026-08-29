@@ -64,3 +64,11 @@ app.include_router(
     prefix=settings.API_V1_STR,
     tags=["Semantic Vector Search"],
 )
+
+# Root-level /search alias for assessment endpoint compatibility
+app.include_router(
+    search_router,
+    prefix="",
+    include_in_schema=False,
+)
+
