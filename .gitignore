@@ -1,23 +1,41 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.pyw
-*.pyz
-*.pywz
-*.pyzw
-*.pyz
+*.py[cod]
+*$py.class
+*.so
 
+# Environments & Tests
 .pytest_cache/
 .venv/
+env/
+venv/
+ENV/
 .env
 
+# IDE & Config
 .vscode/
 launch.json
+.idea/
+.DS_Store
 
-*db-shm
-*db-wal
+# Logs
+*.log
+log.txt
+**/log.txt
 
+# Scripts
 **/scripts/**
 
-**/backend/data/**
+# Databases & Vector DBs
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+**/chroma_db/
+chroma_db/
+data/chroma_db/
+backend/data/
+
+# Build artifacts
+*.tsbuildinfo
