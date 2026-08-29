@@ -109,3 +109,56 @@ def test_api_upload_and_auto_orchestration(client: TestClient):
     assert audit_res.status_code == 200
     audit_data = audit_res.json()
     assert len(audit_data["data"]) > 0
+
+
+def test_api_upload_csv_auto_orchestration(client: TestClient):
+    """Integration Test: Validates that uploading a .csv file functions identically to .json,
+
+    including automatic FHIR normalization, bundle creation, and vector index update.
+    """
+    test_csv = b"""patient_mrn,patient_full_name,date_of_birth,gender_code,document_type,encounter_date,content_body
+MRN-CSV-7701,Elena Rostova,1988-03-22,female,discharge_summary,2024-02-10T11:00:00Z,"Patient admitted with acute exacerbation of asthma. Treated with albuterol nebulizers and oral prednisone."
+MRN-CSV-7701,Elena Rostova,1988-03-22,female,imaging,2024-02-11T09:00:00Z,"Chest Radiograph PA: Lung hyperinflation noted without acute focal consolidation or pneumothorax."
+MRN-CSV-8802,Dmitri Volkov,1972-11-04,male,lab,2024-02-12T14:30:00Z,"Basic Metabolic Panel: Sodium 140 mEq/L, Potassium 4.2 mEq/L, Creatinine 0.9 mg/dL. All normal."
+"""
+
+    # 1. Post CSV upload with auto_process=True
+    response = client.post(
+        "/api/v1/ingest/upload?auto_process=true",
+        files={"file": ("clinical_records.csv", test_csv, "text/csv")},
+    )
+    assert response.status_code == 200
+    res_data = response.json()
+    assert res_data["success"] is True
+    assert res_data["data"]["ingestion"]["total_cleaned"] == 3
+    assert res_data["data"]["fhir_normalization"]["total_bundles_created"] == 2
+    assert res_data["data"]["fhir_normalization"]["total_resources_mapped"] == 5
+
+    # 2. Verify Paginated Records query for the CSV patient
+    paged_res = client.get("/api/v1/records?page=1&page_size=10&mrn=MRN-CSV-7701")
+    assert paged_res.status_code == 200
+    paged_data = paged_res.json()
+    assert paged_data["pagination"]["total_records"] == 2
+    records = paged_data["data"]
+    assert all(r["patient_mrn"] == "MRN-CSV-7701" for r in records)
+    assert any(r["record_type"] == "discharge_summary" for r in records)
+    assert any(r["record_type"] == "imaging" for r in records)
+
+    # 3. Verify FHIR Bundle endpoint for CSV-ingested patient
+    bundle_res = client.get("/api/v1/fhir/bundles/MRN-CSV-7701")
+    assert bundle_res.status_code == 200
+    bundle_data = bundle_res.json()["data"]
+    assert bundle_data["resourceType"] == "Bundle"
+    assert len(bundle_data["entry"]) == 3  # 1 Patient + 1 DocumentReference + 1 DiagnosticReport
+
+    # 4. Verify Semantic Vector Search against CSV-uploaded clinical content
+    search_res = client.post(
+        "/api/v1/search",
+        params={"query": "asthma nebulizer treatment", "patient_mrn": "MRN-CSV-7701"},
+    )
+    assert search_res.status_code == 200
+    search_data = search_res.json()["data"]
+    assert search_data["total_results"] >= 1
+    assert search_data["results"][0]["patient_mrn"] == "MRN-CSV-7701"
+    assert "albuterol nebulizers" in search_data["results"][0]["full_content"]
+

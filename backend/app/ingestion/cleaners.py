@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 from dateutil import parser as date_parser
 
@@ -116,12 +116,18 @@ class ClinicalDataCleaner:
 
         try:
             parsed = date_parser.parse(str(raw_date))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            else:
+                parsed = parsed.astimezone(timezone.utc)
+
+            cleaned_iso = parsed.isoformat()
             log = None
-            if parsed.isoformat() != str(raw_date).strip():
+            if cleaned_iso != str(raw_date).strip():
                 log = AuditLogEntry(
                     field_name="encounter_date",
                     original_value=str(raw_date),
-                    cleaned_value=parsed.isoformat(),
+                    cleaned_value=cleaned_iso,
                     transformation_rule="Standardized timestamp to ISO-8601 UTC representation",
                 )
             return parsed, log
@@ -138,11 +144,13 @@ class ClinicalDataCleaner:
         elif "lab" in val or "panel" in val:
             cleaned = "lab"
         elif (
-            "image" in val
+            "imag" in val
             or "x-ray" in val
             or "mri" in val
             or "ct" in val
             or "rad" in val
+            or "ultrasound" in val
+            or "echo" in val
         ):
             cleaned = "imaging"
         else:

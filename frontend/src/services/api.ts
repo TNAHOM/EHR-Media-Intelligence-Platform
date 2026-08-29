@@ -10,7 +10,7 @@ export interface PaginationMeta {
 }
 
 export interface AuditLogItem {
-  id: number;
+  id: string;
   record_id: string;
   field_name: string;
   original_value?: string | null;

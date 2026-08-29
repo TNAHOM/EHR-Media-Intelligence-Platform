@@ -2,6 +2,7 @@ import base64
 import re
 from datetime import timezone
 
+from app.core.typeid import TypeIDPrefix, generate_deterministic_id, to_fhir_id
 from app.ingestion.models import CleanRecord
 from fhir.resources.attachment import Attachment
 from fhir.resources.bundle import Bundle, BundleEntry
@@ -20,9 +21,15 @@ class FHIRMapper:
         return re.sub(r"[^A-Za-z0-9\-\.]", "-", raw_id.strip()).strip("-")
 
     @classmethod
+    def get_patient_id(cls, patient_mrn: str) -> str:
+        """Standardized patient TypeID generator (FHIR R4 compliant pat-<base32_uuid>)."""
+        tid = generate_deterministic_id(TypeIDPrefix.PATIENT, patient_mrn)
+        return to_fhir_id(tid)
+
+    @classmethod
     def build_patient_resource(cls, record: CleanRecord) -> Patient:
         """Constructs a valid HL7 FHIR R4 Patient resource."""
-        patient_id = cls._sanitize_id(f"pat-{record.patient_mrn.replace('MRN-', '')}")
+        patient_id = cls.get_patient_id(record.patient_mrn)
 
         name_parts = record.patient_name.split()
         family_name = name_parts[-1] if len(name_parts) > 1 else record.patient_name
@@ -59,7 +66,7 @@ class FHIRMapper:
         cls, record: CleanRecord, patient_id: str
     ) -> DocumentReference:
         """Constructs a valid HL7 FHIR R4 DocumentReference for unstructured notes/summaries."""
-        doc_id = cls._sanitize_id(f"doc-{record.id}")
+        doc_id = to_fhir_id(generate_deterministic_id(TypeIDPrefix.DOCUMENT, record.id))
 
         encoded_payload = base64.b64encode(record.content_text.encode("utf-8")).decode(
             "utf-8"
@@ -74,7 +81,6 @@ class FHIRMapper:
             else "Consultation Note"
         )
 
-        # Ensure timestamp is timezone-aware for FHIR 'instant' requirement
         enc_date = record.encounter_date
         if enc_date.tzinfo is None:
             enc_date = enc_date.replace(tzinfo=timezone.utc)
@@ -124,7 +130,9 @@ class FHIRMapper:
         cls, record: CleanRecord, patient_id: str
     ) -> DiagnosticReport:
         """Constructs a valid HL7 FHIR R4 DiagnosticReport for imaging scans and lab panels."""
-        report_id = cls._sanitize_id(f"diag-{record.id}")
+        report_id = to_fhir_id(
+            generate_deterministic_id(TypeIDPrefix.DIAGNOSTIC, record.id)
+        )
 
         is_imaging = record.record_type == "imaging"
         category_code = "RAD" if is_imaging else "LAB"
@@ -169,9 +177,7 @@ class FHIRMapper:
         # 1. Build Base Patient Resource
         try:
             patient_resource = cls.build_patient_resource(records[0])
-            patient_id = str(
-                patient_resource.id or cls._sanitize_id(f"pat-{patient_mrn}")
-            )
+            patient_id = str(patient_resource.id or cls.get_patient_id(patient_mrn))
         except Exception as e:
             return None, [f"Failed to create Patient for {patient_mrn}: {str(e)}"]
 
@@ -206,7 +212,9 @@ class FHIRMapper:
                     f"Error mapping record {rec.id} ({rec.record_type}): {str(ex)}"
                 )
 
-        bundle_id = cls._sanitize_id(f"bundle-{patient_mrn}")
+        bundle_id = to_fhir_id(
+            generate_deterministic_id(TypeIDPrefix.BUNDLE, patient_mrn)
+        )
         bundle = Bundle(
             id=bundle_id,
             type="collection",

@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
 from typing import Any
 
+from pydantic import Field
 from sqlmodel import Field as SQLField, SQLModel
+
+from app.core.schema import AppBaseModel
 
 
 class FHIRBundleBase(SQLModel):
@@ -26,13 +29,19 @@ class FHIRBundle(FHIRBundleBase, table=True):
 
 
 # DTO for API List Responses (Excludes heavy JSON payload for fast listing)
-class FHIRBundleRead(FHIRBundleBase):
+class FHIRBundleRead(AppBaseModel):
+    id: str
+    patient_mrn: str
+    patient_id: str
+    patient_name: str
+    resource_count: int
+    validation_status: str
     created_at: datetime
     updated_at: datetime
 
 
-class FHIRValidationReport(SQLModel):
+class FHIRValidationReport(AppBaseModel):
     total_patients: int
     total_bundles_created: int
     total_resources_mapped: int
-    errors: list[str] = []
+    errors: list[str] = Field(default_factory=list)

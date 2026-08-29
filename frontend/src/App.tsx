@@ -48,6 +48,7 @@ export default function App() {
     if (isSearchMode) return;
 
     let isSubscribed = true;
+    setIsLoading(true);
 
     fetchCleanRecords({
       page,
@@ -82,62 +83,74 @@ export default function App() {
     };
   }, [page, pageSize, resourceType, dateFrom, dateTo, patientMrn, isSearchMode, refreshKey]);
 
-  // Reset page to 1 and set loading when filters change in browse mode
-  const handleResourceTypeChange = (type: string) => {
+  // Search mode effect: executes search reactively when activeSearchQuery or filters change
+  useEffect(() => {
+    if (!isSearchMode || !activeSearchQuery.trim()) return;
+
+    let isSubscribed = true;
     setIsLoading(true);
+
+    searchRecords({
+      query: activeSearchQuery.trim(),
+      resourceType: resourceType || undefined,
+      dateFrom: dateFrom || undefined,
+      dateTo: dateTo || undefined,
+      patientMrn: patientMrn.trim() || undefined,
+      limit: 10,
+    })
+      .then((res) => {
+        if (!isSubscribed) return;
+        if (res.data) {
+          setSearchResults(res.data.results || []);
+          setExecutionTime(res.data.execution_time_ms);
+          setError(null);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!isSubscribed) return;
+        const msg = err instanceof Error ? err.message : 'Failed to execute search';
+        setError(msg);
+      })
+      .finally(() => {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [isSearchMode, activeSearchQuery, resourceType, dateFrom, dateTo, patientMrn, refreshKey]);
+
+  // Filter change handlers
+  const handleResourceTypeChange = (type: string) => {
     setResourceType(type);
     setPage(1);
   };
   const handleDateFromChange = (date: string) => {
-    setIsLoading(true);
     setDateFrom(date);
     setPage(1);
   };
   const handleDateToChange = (date: string) => {
-    setIsLoading(true);
     setDateTo(date);
     setPage(1);
   };
   const handlePatientMrnChange = (mrn: string) => {
-    setIsLoading(true);
     setPatientMrn(mrn);
     setPage(1);
   };
 
-
   // Perform semantic search
-  const handleSearch = async (overrideQuery?: string) => {
+  const handleSearch = (overrideQuery?: string) => {
     const q = overrideQuery !== undefined ? overrideQuery : query;
     if (!q.trim()) {
       handleClearSearch();
       return;
     }
 
-    setIsLoading(true);
     setError(null);
     setIsSearchMode(true);
     setActiveSearchQuery(q.trim());
-
-    try {
-      const res = await searchRecords({
-        query: q.trim(),
-        resourceType: resourceType || undefined,
-        dateFrom: dateFrom || undefined,
-        dateTo: dateTo || undefined,
-        patientMrn: patientMrn.trim() || undefined,
-        limit: 10,
-      });
-
-      if (res.data) {
-        setSearchResults(res.data.results || []);
-        setExecutionTime(res.data.execution_time_ms);
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to execute search';
-      setError(msg);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   // Return from search mode to all records
@@ -196,12 +209,8 @@ export default function App() {
             <button
               type="button"
               onClick={() => {
-                if (isSearchMode) {
-                  handleSearch();
-                } else {
-                  setIsLoading(true);
-                  setRefreshKey((k) => k + 1);
-                }
+                setIsLoading(true);
+                setRefreshKey((k) => k + 1);
               }}
               className="inline-flex items-center gap-1 font-medium underline text-red-800 cursor-pointer"
             >
@@ -316,16 +325,11 @@ export default function App() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUploadSuccess={() => {
-          if (isSearchMode) {
-            handleSearch();
-          } else {
-            setIsLoading(true);
-            setPage(1);
-            setRefreshKey((k) => k + 1);
-          }
+          setIsLoading(true);
+          setPage(1);
+          setRefreshKey((k) => k + 1);
         }}
       />
     </div>
   );
 }
-

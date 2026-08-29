@@ -79,7 +79,7 @@ def execute_semantic_search(
 @router.post("/search/reindex", response_model=StandardResponse[IndexStats])
 def trigger_vector_reindexing(session: SessionDep):
     """Rebuilds the entire ChromaDB semantic vector index across all FHIR bundles and AI summaries."""
-    stats = SearchService.index_all_records(session)
+    stats = SearchService.index_all_records(session, reset=True)
     return StandardResponse(
         success=True,
         message=f"Successfully indexed {stats.total_indexed_documents} clinical items into ChromaDB",

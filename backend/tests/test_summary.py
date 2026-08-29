@@ -1,3 +1,4 @@
+from app.core.config import settings
 from app.llm.models import GeminiClinicalSummaryPayload
 from app.llm.preprocessor import ClinicalDeidentifier
 from app.llm.service import SummarizerService
@@ -56,10 +57,12 @@ def test_word_count_calculation():
     )
     words = SummarizerService._count_words(payload)
     assert words == 18  # Exact word count
-    assert words <= 185  # Well under the prompt ceiling
+    assert words <= settings.MAX_SUMMARY_WORDS_PROMPT
 
 
-def test_summary_api_and_cache_hit(session: Session, client: TestClient):
+def test_summary_api_and_cache_hit(
+    session: Session, client: TestClient, mock_gemini_client
+):
     """End-to-end test: Ingest -> Summarize (Cache Miss) -> Summarize Again (Cache Hit)."""
     sample_json = """[
       {
@@ -85,7 +88,7 @@ def test_summary_api_and_cache_hit(session: Session, client: TestClient):
     assert res_1.status_code == 200
     data_1 = res_1.json()["data"]
     assert data_1["cache_hit"] is False
-    assert data_1["word_count"] <= 220
+    assert data_1["word_count"] <= settings.MAX_SUMMARY_WORDS_LIMIT
     assert "AI-generated" in data_1["disclaimer"]
 
     # 2. Second Call -> CACHE HIT (Instant from SQLite)

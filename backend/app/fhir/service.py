@@ -43,7 +43,7 @@ class FHIRService:
                 patient_id = (
                     str(first_entry_resource.id)
                     if first_entry_resource and first_entry_resource.id
-                    else f"pat-{mrn}"
+                    else FHIRMapper.get_patient_id(mrn)
                 )
                 if not bundle.id:
                     raise ValueError(

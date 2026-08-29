@@ -2,13 +2,15 @@ import json
 import math
 from typing import Annotated, Any
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import func
+from sqlmodel import Session, col, select
+
 from app.core.database import get_session
 from app.core.response import PaginatedResponse, PaginationMeta, StandardResponse
 from app.fhir.models import FHIRBundle, FHIRBundleRead, FHIRValidationReport
 from app.fhir.service import FHIRService
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import func
-from sqlmodel import Session, col, select
+from app.search.service import SearchService
 
 router = APIRouter()
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -18,6 +20,10 @@ SessionDep = Annotated[Session, Depends(get_session)]
 def normalize_to_fhir(session: SessionDep):
     """Triggers FHIR R4 Normalization and Bundle generation across all ingested records."""
     report = FHIRService.normalize_and_store_all(session)
+    if report.total_bundles_created > 0:
+        bundles = session.exec(select(FHIRBundle)).all()
+        SearchService.index_bundles(bundles)
+
     return StandardResponse(
         success=len(report.errors) == 0,
         message=(

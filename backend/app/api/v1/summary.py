@@ -1,11 +1,13 @@
 from typing import Annotated
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session, col, select
+
 from app.core.database import get_session
 from app.core.response import StandardResponse
-from app.llm.models import ClinicalSummaryRead
+from app.llm.models import ClinicalSummaryRead, ClinicalSummaryTable
 from app.llm.service import SummarizerService
-from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session
+from app.search.service import SearchService
 
 router = APIRouter()
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -25,6 +27,18 @@ def generate_patient_summary(
     """
     try:
         summary = SummarizerService.generate_summary(session, patient_mrn)
+        if not summary.cache_hit:
+            summary_record = session.exec(
+                select(ClinicalSummaryTable)
+                .where(
+                    col(ClinicalSummaryTable.patient_mrn)
+                    == patient_mrn.strip().upper()
+                )
+                .order_by(col(ClinicalSummaryTable.created_at).desc())
+            ).first()
+            if summary_record:
+                SearchService.index_summary(summary_record)
+
         cache_status = "CACHE HIT" if summary.cache_hit else "CACHE MISS (AI Generated)"
         return StandardResponse(
             success=True,

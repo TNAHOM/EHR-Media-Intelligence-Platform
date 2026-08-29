@@ -2,9 +2,10 @@ from pathlib import Path
 from typing import Any, cast
 
 import chromadb
-from app.core.config import settings
 from chromadb.config import Settings as ChromaSettings
 from sentence_transformers import SentenceTransformer
+
+from app.core.config import settings
 
 
 class EmbeddingEngine:
@@ -34,16 +35,22 @@ class EmbeddingEngine:
 
 
 class ChromaVectorStore:
-    """Manages the persistent ChromaDB collection for clinical vector search."""
+    """Manages the persistent or ephemeral ChromaDB collection for clinical vector search."""
 
     COLLECTION_NAME = "ehr_clinical_records"
 
-    def __init__(self):
-        Path(settings.CHROMA_PERSIST_DIR).mkdir(parents=True, exist_ok=True)
-        self.client = chromadb.PersistentClient(
-            path=settings.CHROMA_PERSIST_DIR,
-            settings=ChromaSettings(anonymized_telemetry=False),
-        )
+    def __init__(self, persist_dir: str | None = None, is_ephemeral: bool = False):
+        if is_ephemeral:
+            self.client = chromadb.EphemeralClient(
+                settings=ChromaSettings(anonymized_telemetry=False)
+            )
+        else:
+            path = persist_dir or settings.CHROMA_PERSIST_DIR
+            Path(path).mkdir(parents=True, exist_ok=True)
+            self.client = chromadb.PersistentClient(
+                path=path,
+                settings=ChromaSettings(anonymized_telemetry=False),
+            )
         # Using Cosine distance metric
         self.collection = self.client.get_or_create_collection(
             name=self.COLLECTION_NAME,

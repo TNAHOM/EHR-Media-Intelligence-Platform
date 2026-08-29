@@ -5,7 +5,7 @@ class AppBaseModel(BaseModel):
     """Base model enforcing strict Pydantic v2 validation rules across the app."""
 
     model_config = ConfigDict(
-        strict=True,
+        from_attributes=True,
         # Forbids unknown extra JSON fields sent by clients
         extra="forbid",
         validate_assignment=True,

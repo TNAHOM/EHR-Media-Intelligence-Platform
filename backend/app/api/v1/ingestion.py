@@ -2,6 +2,10 @@ import math
 from datetime import date, datetime
 from typing import Annotated
 
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+from sqlalchemy import func
+from sqlmodel import Session, col, select
+
 from app.core.database import get_session
 from app.core.response import PaginatedResponse, PaginationMeta, StandardResponse
 from app.fhir.models import FHIRBundle, FHIRBundleRead
@@ -15,9 +19,6 @@ from app.ingestion.models import (
 )
 from app.ingestion.service import IngestionService
 from app.search.service import SearchService
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
-from sqlalchemy import func
-from sqlmodel import Session, col, select
 
 router = APIRouter()
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -56,14 +57,15 @@ async def upload_ehr_file(
     # FHIR Normalization
     if auto_process:
         fhir_report = FHIRService.normalize_and_store_all(session)
-        # Automatically update ChromaDB vector index in the background
-        SearchService.index_all_records(session)
 
         bundle_statement = select(FHIRBundle).order_by(
             col(FHIRBundle.updated_at).desc()
         )
         db_bundles = session.exec(bundle_statement).all()
         bundle_reads = [FHIRBundleRead.model_validate(b) for b in db_bundles]
+
+        # Incrementally update ChromaDB vector index without wiping
+        SearchService.index_bundles(db_bundles)
 
     message = (
         f"Processed {summary.total_processed} raw records "

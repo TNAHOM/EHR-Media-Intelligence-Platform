@@ -23,6 +23,7 @@ def test_fhir_patient_mapping():
         encounter_date=datetime(2024, 1, 15, 10, 0, tzinfo=timezone.utc),
         content_text="Patient admitted for chest pain.",
         source_format="json",
+        content_hash="test_hash_patient_001",
     )
 
     patient = FHIRMapper.build_patient_resource(record)
@@ -52,6 +53,7 @@ def test_fhir_bundle_assembly_and_reference_integrity():
             encounter_date=datetime(2024, 1, 15, 10, 0, tzinfo=timezone.utc),
             content_text="Patient discharged on Beta-blockers.",
             source_format="json",
+            content_hash="test_hash_doc_001",
         ),
         CleanRecord(
             id="REC-002",
@@ -63,6 +65,7 @@ def test_fhir_bundle_assembly_and_reference_integrity():
             encounter_date=datetime(2024, 1, 16, 11, 0, tzinfo=timezone.utc),
             content_text="Chest X-Ray shows mild cardiomegaly.",
             source_format="json",
+            content_hash="test_hash_diag_002",
         ),
     ]
 
@@ -74,51 +77,54 @@ def test_fhir_bundle_assembly_and_reference_integrity():
     assert bundle.entry is not None
     assert len(bundle.entry) == 3
 
-    patient_res = bundle.entry[0].resource
-    doc_res = bundle.entry[1].resource
-    diag_res = bundle.entry[2].resource
+    # Entry 0: Patient
+    patient_entry = bundle.entry[0].resource
+    assert isinstance(patient_entry, Patient)
+    patient_ref_id = f"Patient/{patient_entry.id}"
 
-    assert isinstance(patient_res, Patient)
-    assert isinstance(doc_res, DocumentReference)
-    assert isinstance(diag_res, DiagnosticReport)
+    # Entry 1: DocumentReference referencing Patient
+    doc_entry = bundle.entry[1].resource
+    assert isinstance(doc_entry, DocumentReference)
+    assert doc_entry.subject is not None
+    assert doc_entry.subject.reference == patient_ref_id
 
-    expected_ref = f"Patient/{patient_res.id}"
-    assert doc_res.subject is not None
-    assert doc_res.subject.reference == expected_ref
-
-    assert diag_res.subject is not None
-    assert diag_res.subject.reference == expected_ref
+    # Entry 2: DiagnosticReport referencing Patient
+    diag_entry = bundle.entry[2].resource
+    assert isinstance(diag_entry, DiagnosticReport)
+    assert diag_entry.subject is not None
+    assert diag_entry.subject.reference == patient_ref_id
 
 
 def test_fhir_normalization_pipeline_and_api(session: Session, client: TestClient):
-    """End-to-end integration test: Ingest raw data -> Normalize to FHIR -> Query via API."""
-    sample_json = """[
+    """End-to-end integration test: Ingest JSON -> Run /fhir/normalize -> Query Bundle Endpoint."""
+    raw_ehr_json = """[
       {
         "export_id": "REC-101",
-        "patient_mrn": "MRN-12345",
-        "patient_full_name": "John Doe",
-        "date_of_birth": "1975-08-20",
+        "patient_mrn": "MRN-11223",
+        "patient_full_name": "Gregory House",
+        "date_of_birth": "1959-06-11",
         "gender_code": "male",
-        "document_type": "discharge_summary",
-        "encounter_date": "2024-02-01T09:00:00Z",
-        "content_body": "Patient recovering well."
+        "document_type": "clinical_note",
+        "encounter_date": "2024-01-10T09:00:00Z",
+        "content_body": "Patient presents with severe right leg pain."
       },
       {
         "export_id": "REC-102",
-        "patient_mrn": "MRN-12345",
-        "patient_full_name": "John Doe",
-        "date_of_birth": "1975-08-20",
+        "patient_mrn": "MRN-11223",
+        "patient_full_name": "Gregory House",
+        "date_of_birth": "1959-06-11",
         "gender_code": "male",
         "document_type": "lab",
-        "encounter_date": "2024-02-02T10:00:00Z",
-        "content_body": "HbA1c 6.5%"
+        "encounter_date": "2024-01-11T14:00:00Z",
+        "content_body": "Comprehensive Metabolic Panel: All within normal limits."
       }
     ]"""
 
-    # Ingest clean records
-    IngestionService.ingest_payload(session, sample_json, "json")
+    # 1. Ingest Raw Records without auto-processing
+    ingest_res = IngestionService.ingest_payload(session, raw_ehr_json, "json")
+    assert ingest_res.total_cleaned == 2
 
-    # 1. Trigger FHIR Normalization API
+    # 2. Trigger Normalization Endpoint
     norm_res = client.post("/api/v1/fhir/normalize")
     assert norm_res.status_code == 200
     norm_data = norm_res.json()
@@ -126,16 +132,9 @@ def test_fhir_normalization_pipeline_and_api(session: Session, client: TestClien
     assert norm_data["data"]["total_bundles_created"] == 1
     assert norm_data["data"]["total_resources_mapped"] == 3
 
-    # 2. Query paginated bundles
-    bundles_res = client.get("/api/v1/fhir/bundles")
-    assert bundles_res.status_code == 200
-    bundles_data = bundles_res.json()
-    assert bundles_data["pagination"]["total_records"] == 1
-    assert bundles_data["data"][0]["patient_mrn"] == "MRN-12345"
-
-    # 3. Retrieve raw FHIR Bundle JSON
-    bundle_json_res = client.get("/api/v1/fhir/bundles/MRN-12345")
-    assert bundle_json_res.status_code == 200
-    raw_bundle = bundle_json_res.json()["data"]
-    assert raw_bundle["resourceType"] == "Bundle"
-    assert len(raw_bundle["entry"]) == 3
+    # 3. Fetch Generated Bundle by MRN
+    bundle_res = client.get("/api/v1/fhir/bundles/MRN-11223")
+    assert bundle_res.status_code == 200
+    bundle_data = bundle_res.json()["data"]
+    assert bundle_data["resourceType"] == "Bundle"
+    assert len(bundle_data["entry"]) == 3

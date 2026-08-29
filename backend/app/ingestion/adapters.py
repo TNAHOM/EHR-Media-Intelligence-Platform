@@ -2,6 +2,7 @@ import csv
 import hashlib
 import json
 
+from app.core.typeid import TypeIDPrefix, generate_deterministic_id
 from app.ingestion.cleaners import ClinicalDataCleaner
 from app.ingestion.models import AuditLog, CleanRecord
 
@@ -25,35 +26,47 @@ class IngestionAdapter:
             raw_data = [raw_data]
 
         for item in raw_data:
-            logs: list[AuditLog] = []
-
             mrn, mrn_log = ClinicalDataCleaner.normalize_mrn(
                 item.get("patient_mrn") or item.get("mrn")
             )
             name, name_log = ClinicalDataCleaner.normalize_name(
-                item.get("patient_full_name") or item.get("patient_name")
+                item.get("patient_full_name") or item.get("patient_name") or item.get("name")
             )
             gender, gender_log = ClinicalDataCleaner.normalize_gender(
-                item.get("gender_code") or item.get("gender")
+                item.get("gender_code") or item.get("gender") or item.get("sex")
             )
             dob, dob_log = ClinicalDataCleaner.parse_dob(
-                item.get("date_of_birth") or item.get("dob")
+                item.get("date_of_birth") or item.get("birth_date") or item.get("dob")
             )
             enc_date, date_log = ClinicalDataCleaner.parse_encounter_date(
-                item.get("encounter_date") or item.get("record_date")
+                item.get("encounter_date") or item.get("recorded_date") or item.get("effective_date") or item.get("record_date")
             )
             rec_type, type_log = ClinicalDataCleaner.normalize_record_type(
-                item.get("document_type") or item.get("record_type")
+                item.get("document_type") or item.get("record_type") or item.get("category")
             )
-            content = (item.get("content_body") or item.get("text") or "").strip()
+            content = (
+                item.get("content_body")
+                or item.get("clinical_text")
+                or item.get("findings_text")
+                or item.get("text")
+                or ""
+            ).strip()
 
             # Discard records with missing mandatory clinical identifiers
             if not mrn or not dob or not enc_date or not content:
                 invalid_count += 1
                 continue
 
-            rec_id = item.get("export_id") or f"REC-{len(records) + 1:04d}"
+            # Deduplication
+            doc_hash = cls._compute_hash(mrn, enc_date.isoformat(), content)
+            if doc_hash in seen_hashes:
+                duplicates_count += 1
+                continue
+            seen_hashes.add(doc_hash)
 
+            rec_id = item.get("export_id") or item.get("record_id") or generate_deterministic_id(TypeIDPrefix.RECORD, doc_hash)
+
+            logs: list[AuditLog] = []
             for raw_entry in [
                 mrn_log,
                 name_log,
@@ -73,13 +86,6 @@ class IngestionAdapter:
                         )
                     )
 
-            # Deduplication
-            doc_hash = cls._compute_hash(mrn, enc_date.isoformat(), content)
-            if doc_hash in seen_hashes:
-                duplicates_count += 1
-                continue
-            seen_hashes.add(doc_hash)
-
             records.append(
                 CleanRecord(
                     id=rec_id,
@@ -91,6 +97,7 @@ class IngestionAdapter:
                     encounter_date=enc_date,
                     content_text=content,
                     source_format="json",
+                    content_hash=doc_hash,
                     audit_trail=logs,
                 )
             )
@@ -107,36 +114,45 @@ class IngestionAdapter:
         reader = csv.DictReader(raw_csv_str.strip().splitlines())
 
         for row in reader:
-            logs: list[AuditLog] = []
-
             mrn, mrn_log = ClinicalDataCleaner.normalize_mrn(
                 row.get("patient_mrn") or row.get("mrn")
             )
             name, name_log = ClinicalDataCleaner.normalize_name(
-                row.get("patient_name") or row.get("name")
+                row.get("patient_full_name") or row.get("patient_name") or row.get("name")
             )
             gender, gender_log = ClinicalDataCleaner.normalize_gender(
-                row.get("gender") or row.get("sex")
+                row.get("gender_code") or row.get("gender") or row.get("sex")
             )
             dob, dob_log = ClinicalDataCleaner.parse_dob(
-                row.get("birth_date") or row.get("dob")
+                row.get("date_of_birth") or row.get("birth_date") or row.get("dob")
             )
             enc_date, date_log = ClinicalDataCleaner.parse_encounter_date(
-                row.get("recorded_date") or row.get("effective_date")
+                row.get("encounter_date") or row.get("recorded_date") or row.get("effective_date") or row.get("record_date")
             )
             rec_type, type_log = ClinicalDataCleaner.normalize_record_type(
-                row.get("category") or row.get("record_type")
+                row.get("document_type") or row.get("record_type") or row.get("category")
             )
             content = (
-                row.get("clinical_text") or row.get("findings_text") or ""
+                row.get("content_body")
+                or row.get("clinical_text")
+                or row.get("findings_text")
+                or row.get("text")
+                or ""
             ).strip()
 
             if not mrn or not dob or not enc_date or not content:
                 invalid_count += 1
                 continue
 
-            rec_id = row.get("record_id") or f"CSV-{len(records) + 1:04d}"
+            doc_hash = cls._compute_hash(mrn, enc_date.isoformat(), content)
+            if doc_hash in seen_hashes:
+                duplicates_count += 1
+                continue
+            seen_hashes.add(doc_hash)
 
+            rec_id = row.get("record_id") or row.get("export_id") or generate_deterministic_id(TypeIDPrefix.RECORD, doc_hash)
+
+            logs: list[AuditLog] = []
             for raw_entry in [
                 mrn_log,
                 name_log,
@@ -156,12 +172,6 @@ class IngestionAdapter:
                         )
                     )
 
-            doc_hash = cls._compute_hash(mrn, enc_date.isoformat(), content)
-            if doc_hash in seen_hashes:
-                duplicates_count += 1
-                continue
-            seen_hashes.add(doc_hash)
-
             records.append(
                 CleanRecord(
                     id=rec_id,
@@ -173,6 +183,7 @@ class IngestionAdapter:
                     encounter_date=enc_date,
                     content_text=content,
                     source_format="csv",
+                    content_hash=doc_hash,
                     audit_trail=logs,
                 )
             )

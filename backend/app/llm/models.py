@@ -1,11 +1,11 @@
 from datetime import datetime, timezone
 from typing import Any
 
+from app.core.schema import AppBaseModel
+from app.core.typeid import TypeIDPrefix, generate_id
 from pydantic import ConfigDict, Field
 from sqlmodel import Field as SQLField
 from sqlmodel import SQLModel
-
-from app.core.schema import AppBaseModel
 
 
 class ClinicalSummaryBase(SQLModel):
@@ -33,7 +33,11 @@ class ClinicalSummaryBase(SQLModel):
 class ClinicalSummaryTable(ClinicalSummaryBase, table=True):
     __tablename__: Any = "clinical_summaries"
 
-    id: int | None = SQLField(default=None, primary_key=True)
+    id: str = SQLField(
+        default_factory=lambda: generate_id(TypeIDPrefix.SUMMARY),
+        primary_key=True,
+        description="Clinical Summary TypeID (e.g. sum_01j7...)",
+    )
     content_hash: str = SQLField(
         index=True,
         description="Deterministic hash of patient MRN + Bundle JSON for caching",
@@ -46,6 +50,7 @@ class ClinicalSummaryTable(ClinicalSummaryBase, table=True):
 
 
 class ClinicalSummaryRead(ClinicalSummaryBase):
+    id: str | None = None
     cache_hit: bool = False
     created_at: datetime
 
