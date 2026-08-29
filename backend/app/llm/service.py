@@ -83,13 +83,12 @@ class SummarizerService:
                 "deterministic-fallback",
             )
 
-        # 4. Prompt with strict 190-word instruction
         system_instruction = (
             "You are an expert hospital clinical triage AI assistant. "
             "Synthesize a thorough, detailed, and clinically rich summary from the provided patient timeline.\n"
             "STRICT CLINICAL RULES:\n"
             "1. Ground all statements strictly in the provided records. Never assume or hallucinate.\n"
-            f"2. DEPTH & LENGTH: Target a detailed summary between 140 and {settings.MAX_SUMMARY_WORDS_PROMPT} words (strictly under {settings.MAX_SUMMARY_WORDS_PROMPT} words total). Do NOT output one-line summaries—expand on clinical context, vital signs, test metrics, and care plans.\n"
+            f"2. DEPTH & LENGTH: Target a detailed summary between 160 and {settings.MAX_SUMMARY_WORDS_PROMPT} words (strictly under {settings.MAX_SUMMARY_WORDS_PROMPT} words total). Do NOT output one-line summaries—expand on clinical context, vital signs, test metrics, and care plans.\n"
             "3. Populate the exact JSON schema with descriptive details:\n"
             "   - chief_concern: Detail the presenting symptoms, severity, and context of presentation.\n"
             "   - key_diagnoses: List active and differential diagnoses with supporting clinical findings.\n"

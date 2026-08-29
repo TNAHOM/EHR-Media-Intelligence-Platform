@@ -1,4 +1,5 @@
 import math
+from datetime import date, datetime
 from typing import Annotated
 
 from app.core.database import get_session
@@ -91,10 +92,44 @@ def get_clean_records(
     page: Annotated[int, Query(ge=1, description="Page number")] = 1,
     page_size: Annotated[int, Query(ge=1, le=100, description="Items per page")] = 10,
     mrn: Annotated[str | None, Query(description="Filter by Patient MRN")] = None,
+    resource_type: Annotated[
+        str | None,
+        Query(
+            description="Filter by FHIR resource type (DocumentReference, DiagnosticReport)"
+        ),
+    ] = None,
+    record_type: Annotated[
+        str | None, Query(description="Filter by clinical record type")
+    ] = None,
+    date_from: Annotated[
+        date | None,
+        Query(description="Filter records on or after date (YYYY-MM-DD)"),
+    ] = None,
+    date_to: Annotated[
+        date | None,
+        Query(description="Filter records on or before date (YYYY-MM-DD)"),
+    ] = None,
 ):
     statement = select(CleanRecord)
     if mrn:
         statement = statement.where(col(CleanRecord.patient_mrn) == mrn.strip().upper())
+    if record_type:
+        statement = statement.where(col(CleanRecord.record_type) == record_type)
+    if resource_type:
+        if resource_type == "DocumentReference":
+            statement = statement.where(
+                col(CleanRecord.record_type).in_(["clinical_note", "discharge_summary"])
+            )
+        elif resource_type == "DiagnosticReport":
+            statement = statement.where(
+                col(CleanRecord.record_type).in_(["lab", "imaging"])
+            )
+    if date_from:
+        start_dt = datetime.combine(date_from, datetime.min.time())
+        statement = statement.where(col(CleanRecord.encounter_date) >= start_dt)
+    if date_to:
+        end_dt = datetime.combine(date_to, datetime.max.time())
+        statement = statement.where(col(CleanRecord.encounter_date) <= end_dt)
 
     count_statement = select(func.count()).select_from(statement.subquery())
     total_records = session.exec(count_statement).one()

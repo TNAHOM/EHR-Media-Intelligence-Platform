@@ -1,9 +1,11 @@
 from datetime import datetime, timezone
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, Field
 from sqlmodel import Field as SQLField
 from sqlmodel import SQLModel
+
+from app.core.schema import AppBaseModel
 
 
 class ClinicalSummaryBase(SQLModel):
@@ -48,7 +50,7 @@ class ClinicalSummaryRead(ClinicalSummaryBase):
     created_at: datetime
 
 
-class GeminiClinicalSummaryPayload(BaseModel):
+class GeminiClinicalSummaryPayload(AppBaseModel):
     chief_concern: str = Field(
         description="Primary presenting problem or chief complaint"
     )
@@ -61,3 +63,5 @@ class GeminiClinicalSummaryPayload(BaseModel):
     flagged_anomalies: str = Field(
         description="Critical or abnormal findings requiring clinician attention"
     )
+
+    model_config = ConfigDict(extra="ignore")

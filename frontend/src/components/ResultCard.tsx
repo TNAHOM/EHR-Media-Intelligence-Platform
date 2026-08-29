@@ -1,4 +1,4 @@
-import { FileText, Activity, Sparkles, ChevronRight, User, Calendar, LucideIcon } from 'lucide-react';
+import { FileText, Activity, Sparkles, ChevronRight, User, Calendar, LucideIcon, CheckCircle2 } from 'lucide-react';
 import { SearchResultItem } from '../services/api';
 
 interface ResultCardProps {
@@ -18,8 +18,10 @@ interface ResourceTag {
 }
 
 export default function ResultCard({ item, onSelectPatient }: ResultCardProps) {
-  // Score Badge styling
-  const scorePercent = Math.round(item.relevance_score * 100);
+  // Score Badge styling (only for semantic search matches)
+  const isSearchMatch = Boolean(item.isSearchMatch && typeof item.relevance_score === 'number');
+  const scorePercent = isSearchMatch ? Math.round((item.relevance_score || 0) * 100) : null;
+
   const getScoreBadge = (score: number): ScoreBadge => {
     if (score >= 0.40) {
       return { bg: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'High Match' };
@@ -30,7 +32,9 @@ export default function ResultCard({ item, onSelectPatient }: ResultCardProps) {
     return { bg: 'bg-slate-100 text-slate-600 border-slate-200', label: 'Low Relevance' };
   };
 
-  const badge = getScoreBadge(item.relevance_score);
+  const badge = isSearchMatch && typeof item.relevance_score === 'number'
+    ? getScoreBadge(item.relevance_score)
+    : null;
 
   // Resource Type Tag styling
   const getResourceTag = (type: string, category?: string): ResourceTag => {
@@ -63,7 +67,7 @@ export default function ResultCard({ item, onSelectPatient }: ResultCardProps) {
       onClick={onSelectPatient}
       className="group bg-white rounded-xl border border-slate-200 p-5 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer space-y-3"
     >
-      {/* Card Header: Metadata Badges & Relevance */}
+      {/* Card Header: Metadata Badges & Relevance / Status */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${resourceInfo.style}`}>
@@ -77,9 +81,15 @@ export default function ResultCard({ item, onSelectPatient }: ResultCardProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border ${badge.bg}`}>
-            {scorePercent}% {badge.label}
-          </span>
+          {badge && scorePercent !== null ? (
+            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border ${badge.bg}`}>
+              {scorePercent}% {badge.label}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium text-slate-500 bg-slate-50 border border-slate-200">
+              <CheckCircle2 className="h-3 w-3 text-emerald-600" /> Standard Record
+            </span>
+          )}
         </div>
       </div>
 
@@ -108,3 +118,4 @@ export default function ResultCard({ item, onSelectPatient }: ResultCardProps) {
     </div>
   );
 }
+

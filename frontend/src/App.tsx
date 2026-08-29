@@ -1,63 +1,169 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import SearchAndFilters from './components/SearchAndFilters';
 import ResultCard from './components/ResultCard';
 import PatientDrawer from './components/PatientDrawer';
 import UploadModal from './components/UploadModal';
-import EmptyState from './components/EmptyState';
-import { searchRecords, SearchResultItem } from './services/api';
-import { Clock } from 'lucide-react';
+import Pagination from './components/Pagination';
+import {
+  fetchCleanRecords,
+  mapCleanRecordToSearchResultItem,
+  PaginationMeta,
+  searchRecords,
+  SearchResultItem,
+} from './services/api';
+import { Clock, Database, ArrowLeft, RefreshCw } from 'lucide-react';
+
 
 export default function App() {
+  // Search & Filter State
   const [query, setQuery] = useState<string>('');
   const [resourceType, setResourceType] = useState<string>('');
   const [dateFrom, setDateFrom] = useState<string>('');
   const [dateTo, setDateTo] = useState<string>('');
   const [patientMrn, setPatientMrn] = useState<string>('');
-  const [results, setResults] = useState<SearchResultItem[]>([]);
-  const [executionTime, setExecutionTime] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasSearched, setHasSearched] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
-  // Drawer & Upload state
+  // Mode & Data State
+  const [isSearchMode, setIsSearchMode] = useState<boolean>(false);
+  const [activeSearchQuery, setActiveSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
+
+  // Paginated Records (Browse Mode)
+  const [cleanRecords, setCleanRecords] = useState<SearchResultItem[]>([]);
+  const [pagination, setPagination] = useState<PaginationMeta | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  // Status & Modals
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<SearchResultItem | null>(null);
   const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
+  // Initial load and filter change for browse mode
+  useEffect(() => {
+    if (isSearchMode) return;
+
+    let isSubscribed = true;
+
+    fetchCleanRecords({
+      page,
+      pageSize,
+      mrn: patientMrn.trim() || undefined,
+      resourceType: resourceType || undefined,
+      dateFrom: dateFrom || undefined,
+      dateTo: dateTo || undefined,
+    })
+      .then((res) => {
+        if (!isSubscribed) return;
+        if (res.data) {
+          const mapped = res.data.map(mapCleanRecordToSearchResultItem);
+          setCleanRecords(mapped);
+          setPagination(res.pagination);
+          setError(null);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!isSubscribed) return;
+        const msg = err instanceof Error ? err.message : 'Failed to load records';
+        setError(msg);
+      })
+      .finally(() => {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [page, pageSize, resourceType, dateFrom, dateTo, patientMrn, isSearchMode, refreshKey]);
+
+  // Reset page to 1 and set loading when filters change in browse mode
+  const handleResourceTypeChange = (type: string) => {
+    setIsLoading(true);
+    setResourceType(type);
+    setPage(1);
+  };
+  const handleDateFromChange = (date: string) => {
+    setIsLoading(true);
+    setDateFrom(date);
+    setPage(1);
+  };
+  const handleDateToChange = (date: string) => {
+    setIsLoading(true);
+    setDateTo(date);
+    setPage(1);
+  };
+  const handlePatientMrnChange = (mrn: string) => {
+    setIsLoading(true);
+    setPatientMrn(mrn);
+    setPage(1);
+  };
+
+
+  // Perform semantic search
   const handleSearch = async (overrideQuery?: string) => {
-    const q = overrideQuery || query;
-    if (!q.trim()) return;
+    const q = overrideQuery !== undefined ? overrideQuery : query;
+    if (!q.trim()) {
+      handleClearSearch();
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
-    setHasSearched(true);
+    setIsSearchMode(true);
+    setActiveSearchQuery(q.trim());
 
     try {
       const res = await searchRecords({
-        query: q,
+        query: q.trim(),
         resourceType: resourceType || undefined,
         dateFrom: dateFrom || undefined,
         dateTo: dateTo || undefined,
-        patientMrn: patientMrn || undefined,
-        limit: 10,
+        patientMrn: patientMrn.trim() || undefined,
+        limit: 50,
       });
 
       if (res.data) {
-        setResults(res.data.results || []);
+        setSearchResults(res.data.results || []);
         setExecutionTime(res.data.execution_time_ms);
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to execute search';
-      setError(errorMessage);
+      const msg = err instanceof Error ? err.message : 'Failed to execute search';
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Return from search mode to all records
+  const handleClearSearch = () => {
+    setIsSearchMode(false);
+    setActiveSearchQuery('');
+    setSearchResults([]);
+    setExecutionTime(null);
+    setQuery('');
   };
 
   const handleQuickSearch = (sampleQuery: string) => {
     setQuery(sampleQuery);
     handleSearch(sampleQuery);
   };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+  };
+
+  const displayedRecords = isSearchMode ? searchResults : cleanRecords;
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50/50">
@@ -69,66 +175,147 @@ export default function App() {
           query={query}
           setQuery={setQuery}
           resourceType={resourceType}
-          setResourceType={setResourceType}
+          setResourceType={handleResourceTypeChange}
           dateFrom={dateFrom}
-          setDateFrom={setDateFrom}
+          setDateFrom={handleDateFromChange}
           dateTo={dateTo}
-          setDateTo={setDateTo}
+          setDateTo={handleDateToChange}
           patientMrn={patientMrn}
-          setPatientMrn={setPatientMrn}
+          setPatientMrn={handlePatientMrnChange}
           onSearch={() => handleSearch()}
+          onClearSearch={handleClearSearch}
+          onQuickSearch={handleQuickSearch}
           isLoading={isLoading}
         />
 
         {/* Error Alert */}
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs">
-            {error}
+          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center justify-between">
+            <span>{error}</span>
+            <button
+              type="button"
+              onClick={() => {
+                if (isSearchMode) {
+                  handleSearch();
+                } else {
+                  setIsLoading(true);
+                  setRefreshKey((k) => k + 1);
+                }
+              }}
+              className="inline-flex items-center gap-1 font-medium underline text-red-800 cursor-pointer"
+            >
+              <RefreshCw className="h-3 w-3" /> Retry
+            </button>
           </div>
         )}
 
-        {/* Results Metadata Header */}
-        {hasSearched && !isLoading && !error && (
-          <div className="flex items-center justify-between text-xs text-slate-500 px-1">
-            <span>
-              Showing <strong className="text-slate-800">{results.length}</strong> matching records
-            </span>
-            {executionTime !== null && (
-              <span className="inline-flex items-center gap-1 font-mono text-[11px] bg-white px-2 py-0.5 rounded border border-slate-200">
+        {/* Mode Status & Metadata Header */}
+        {!isLoading && !error && (
+          <div className="flex items-center justify-between text-xs text-slate-500 px-1 flex-wrap gap-2">
+            {isSearchMode ? (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleClearSearch}
+                  className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer transition-colors bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded-md border border-indigo-200 text-xs"
+                >
+                  <ArrowLeft className="h-3 w-3" /> View All Records
+                </button>
+                <span>
+                  Found <strong className="text-slate-800">{searchResults.length}</strong> semantic matches for "
+                  <strong className="text-slate-900">{activeSearchQuery}</strong>"
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-slate-800">
+                  <Database className="h-3.5 w-3.5 text-slate-500" /> All Clinical Records
+                </span>
+                {pagination && (
+                  <span className="text-slate-400">
+                    ({pagination.total_records} total in database)
+                  </span>
+                )}
+              </div>
+            )}
+
+            {isSearchMode && executionTime !== null && (
+              <span className="inline-flex items-center gap-1 font-mono text-[11px] bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
                 <Clock className="h-3 w-3 text-slate-400" /> {executionTime}ms
               </span>
             )}
           </div>
         )}
 
-        {/* Results List / Empty States */}
+        {/* Records List / Skeletons / Empty States */}
         {isLoading ? (
           <div className="space-y-3">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="bg-white rounded-xl border border-slate-200 p-5 animate-pulse space-y-3">
-                <div className="h-4 bg-slate-200 rounded w-1/4" />
+            {[1, 2, 3, 4].map((n) => (
+              <div
+                key={n}
+                className="bg-white rounded-xl border border-slate-200 p-5 animate-pulse space-y-3 shadow-2xs"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="h-4 bg-slate-200 rounded w-1/4" />
+                  <div className="h-4 bg-slate-100 rounded w-16" />
+                </div>
                 <div className="h-5 bg-slate-200 rounded w-1/2" />
                 <div className="h-12 bg-slate-100 rounded w-full" />
               </div>
             ))}
           </div>
-        ) : hasSearched && results.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-slate-200 p-6 space-y-2">
-            <h3 className="font-semibold text-slate-800 text-sm">No clinical records matched your filters</h3>
-            <p className="text-xs text-slate-400">Try broadening your search query or removing the date/type filters.</p>
-          </div>
-        ) : results.length > 0 ? (
-          <div className="space-y-3.5">
-            {results.map((item) => (
-              <ResultCard
-                key={item.record_id}
-                item={item}
-                onSelectPatient={() => setSelectedPatient(item)}
-              />
-            ))}
+        ) : displayedRecords.length === 0 ? (
+          <div className="text-center py-14 bg-white rounded-xl border border-slate-200 p-6 space-y-3 shadow-sm">
+            <h3 className="font-semibold text-slate-800 text-sm sm:text-base">
+              {isSearchMode
+                ? 'No clinical records matched your search query'
+                : 'No clinical records found'}
+            </h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              {isSearchMode
+                ? 'Try broadening your search query or removing the date/type filters.'
+                : 'No records match your active filters, or the database is currently empty.'}
+            </p>
+            {isSearchMode ? (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" /> Back to All Records
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsUploadOpen(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
+              >
+                Upload EHR Dataset
+              </button>
+            )}
           </div>
         ) : (
-          <EmptyState onQuickSearch={handleQuickSearch} />
+          <div className="space-y-4">
+            <div className="space-y-3">
+              {displayedRecords.map((item) => (
+                <ResultCard
+                  key={item.record_id}
+                  item={item}
+                  onSelectPatient={() => setSelectedPatient(item)}
+                />
+              ))}
+            </div>
+
+            {/* Pagination for Browse Mode */}
+            {!isSearchMode && pagination && pagination.total_pages > 1 && (
+              <Pagination
+                pagination={pagination}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                isLoading={isLoading}
+              />
+            )}
+          </div>
         )}
       </main>
 
@@ -144,9 +331,16 @@ export default function App() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUploadSuccess={() => {
-          if (query) handleSearch();
+          if (isSearchMode) {
+            handleSearch();
+          } else {
+            setIsLoading(true);
+            setPage(1);
+            setRefreshKey((k) => k + 1);
+          }
         }}
       />
     </div>
   );
 }
+

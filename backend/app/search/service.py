@@ -15,6 +15,7 @@ from app.search.models import (
 from app.search.vector_store import EmbeddingEngine, vector_store
 from sqlmodel import Session, select
 
+from app.core.config import settings
 
 class SearchService:
     @staticmethod
@@ -192,19 +193,16 @@ class SearchService:
     def search(cls, req: SearchQueryRequest) -> SearchResponse:
         start_time = time.perf_counter()
 
-        # 1. Embed search query
         query_vector = EmbeddingEngine.embed_text(req.query)
 
-        # 2. Build ChromaDB Metadata Filter
+        # Build ChromaDB Metadata Filter
         filter_conditions: list[dict[str, Any]] = []
 
         if req.resource_type:
             filter_conditions.append({"resource_type": {"$eq": req.resource_type}})
 
         if req.patient_mrn:
-            filter_conditions.append(
-                {"patient_mrn": {"$eq": req.patient_mrn.strip().upper()}}
-            )
+            filter_conditions.append({"patient_mrn": {"$eq": req.patient_mrn.strip().upper()}})
 
         if req.date_from:
             date_from_int = cls._date_to_int(req.date_from)
@@ -220,14 +218,14 @@ class SearchService:
         elif len(filter_conditions) > 1:
             where_filter = {"$and": filter_conditions}
 
-        # 3. Query ChromaDB Vector Index
+        # Vector Index
         results = vector_store.query(
             query_embedding=query_vector,
             where_filter=where_filter,
             top_k=req.limit,
         )
 
-        # 4. Parse Results and Calculate Relevance Scores
+        # 4. Parse Results and Apply > 20% Cutoff
         items: list[SearchResultItem] = []
         ids = results.get("ids", [[]])[0]
         metadatas = results.get("metadatas", [[]])[0]
@@ -240,8 +238,11 @@ class SearchService:
             # Convert cosine distance to 0.0 - 1.0 similarity score
             similarity = max(0.0, min(1.0, 1.0 - float(dist)))
 
+            # Exclude low-confidence noise (<= 20% / 0.20)
+            if similarity <= settings.MIN_RELEVANCE_SCORE:
+                continue
+
             full_doc = str(meta.get("full_content") or documents[i])
-            # Construct highlighted snippet
             snippet = full_doc[:160] + "..." if len(full_doc) > 160 else full_doc
 
             items.append(

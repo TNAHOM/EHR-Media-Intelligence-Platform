@@ -19,3 +19,5 @@ launch.json
 *db-wal
 
 **/scripts/**
+
+**/backend/data/**

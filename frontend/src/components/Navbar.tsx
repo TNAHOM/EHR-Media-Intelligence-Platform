@@ -1,4 +1,4 @@
-import { Activity, Upload, Sparkles } from 'lucide-react';
+import { Activity, Upload } from 'lucide-react';
 
 interface NavbarProps {
   onOpenUpload: () => void;

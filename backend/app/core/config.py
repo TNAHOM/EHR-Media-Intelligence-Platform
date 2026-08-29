@@ -15,6 +15,7 @@ class Settings(BaseSettings):
 
     CHROMA_PERSIST_DIR: str = "./data/chroma_db"
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
+    MIN_RELEVANCE_SCORE: float = 0.20
 
     MAX_SUMMARY_WORDS_PROMPT: int = 190
     MAX_SUMMARY_WORDS_LIMIT: int = 215

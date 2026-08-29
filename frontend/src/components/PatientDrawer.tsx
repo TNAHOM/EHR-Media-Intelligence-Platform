@@ -146,9 +146,13 @@ export default function PatientDrawer({ isOpen, onClose, selectedRecord }: Patie
                     </span>
                   </div>
                   <div className="text-xs font-mono text-slate-400">
-                    Record ID: {selectedRecord.record_id} • Match Score: {Math.round(selectedRecord.relevance_score * 100)}%
+                    Record ID: {selectedRecord.record_id}
+                    {typeof selectedRecord.relevance_score === 'number' && (
+                      <span> • Match Score: {Math.round(selectedRecord.relevance_score * 100)}%</span>
+                    )}
                   </div>
                 </div>
+
 
                 <div className="space-y-2">
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Full Record Content</h4>
@@ -165,7 +169,7 @@ export default function PatientDrawer({ isOpen, onClose, selectedRecord }: Patie
                     <Sparkles className="h-4 w-4" /> Model: {summaryData.model_used}
                   </span>
                   <span className="text-slate-500">
-                    {summaryData.cache_hit ? '⚡ Cached (0ms)' : 'AI Generated'} • {summaryData.word_count} words
+                    {summaryData.cache_hit ? '⚡ Cached (0ms)' : 'AI Generated'}
                   </span>
                 </div>
 

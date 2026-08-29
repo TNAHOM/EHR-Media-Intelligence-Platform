@@ -1,7 +1,7 @@
 from datetime import date, datetime, timezone
 from typing import Literal, Optional, Any
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field as SQLField, Relationship, SQLModel
 
 from app.fhir.models import FHIRBundleRead, FHIRValidationReport
 
@@ -10,7 +10,7 @@ RecordCategory = Literal["clinical_note", "discharge_summary", "lab", "imaging"]
 
 
 class AuditLogBase(SQLModel):
-    field_name: str = Field(index=True)
+    field_name: str = SQLField(index=True)
     original_value: str | None = None
     cleaned_value: str | None = None
     transformation_rule: str
@@ -19,13 +19,13 @@ class AuditLogBase(SQLModel):
 class AuditLog(AuditLogBase, table=True):
     __tablename__: Any = "audit_logs"
 
-    id: int | None = Field(default=None, primary_key=True)
-    record_id: str = Field(
+    id: int | None = SQLField(default=None, primary_key=True)
+    record_id: str = SQLField(
         foreign_key="clean_records.id",
         index=True,
         ondelete="CASCADE",
     )
-    created_at: datetime = Field(
+    created_at: datetime = SQLField(
         default_factory=lambda: datetime.now(timezone.utc),
         index=True,
     )
@@ -34,21 +34,21 @@ class AuditLog(AuditLogBase, table=True):
 
 
 class CleanRecordBase(SQLModel):
-    id: str = Field(primary_key=True, index=True)
-    patient_mrn: str = Field(index=True, description="Canonical MRN (e.g., MRN-88401)")
-    patient_name: str = Field(description="Normalized Title-cased Full Name")
-    dob: date = Field(description="Canonical ISO date (YYYY-MM-DD)")
-    gender: str = Field(description="FHIR-compliant administrative gender")
-    record_type: str = Field(index=True, description="Categorized clinical record type")
-    encounter_date: datetime = Field(index=True, description="UTC ISO timestamp")
-    content_text: str = Field(description="Sanitized clinical narrative or findings")
-    source_format: str = Field(description="Source file type: json or csv")
+    id: str = SQLField(primary_key=True, index=True)
+    patient_mrn: str = SQLField(index=True, description="Canonical MRN (e.g., MRN-88401)")
+    patient_name: str = SQLField(description="Normalized Title-cased Full Name")
+    dob: date = SQLField(description="Canonical ISO date (YYYY-MM-DD)")
+    gender: str = SQLField(description="FHIR-compliant administrative gender")
+    record_type: str = SQLField(index=True, description="Categorized clinical record type")
+    encounter_date: datetime = SQLField(index=True, description="UTC ISO timestamp")
+    content_text: str = SQLField(description="Sanitized clinical narrative or findings")
+    source_format: str = SQLField(description="Source file type: json or csv")
 
 
 class CleanRecord(CleanRecordBase, table=True):
     __tablename__: Any = "clean_records"
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
 
     audit_trail: list[AuditLog] = Relationship(
         back_populates="record",

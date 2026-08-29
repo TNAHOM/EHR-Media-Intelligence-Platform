@@ -1,12 +1,14 @@
 from datetime import date
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
+
+from app.core.schema import AppBaseModel
 
 ResourceTypeFilter = Literal["DocumentReference", "DiagnosticReport", "ClinicalSummary"]
 
 
-class SearchQueryRequest(BaseModel):
+class SearchQueryRequest(AppBaseModel):
     query: str = Field(
         description="Natural language search query from clinician", min_length=2
     )
@@ -30,7 +32,7 @@ class SearchQueryRequest(BaseModel):
     model_config = ConfigDict(strict=False, extra="ignore")
 
 
-class SearchResultItem(BaseModel):
+class SearchResultItem(AppBaseModel):
     record_id: str = Field(description="Internal resource identifier")
     patient_mrn: str = Field(description="Patient MRN")
     patient_name: str = Field(description="Patient Full Name")
@@ -52,14 +54,14 @@ class SearchResultItem(BaseModel):
     )
 
 
-class SearchResponse(BaseModel):
+class SearchResponse(AppBaseModel):
     query: str
     total_results: int
     execution_time_ms: float
     results: list[SearchResultItem]
 
 
-class IndexStats(BaseModel):
+class IndexStats(AppBaseModel):
     total_indexed_documents: int
     document_references_count: int
     diagnostic_reports_count: int
